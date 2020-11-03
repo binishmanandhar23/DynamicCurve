@@ -25,7 +25,7 @@ Maven
 or if you want to further customize the module, simply import it.
 
 ## Note
-If there are any confusions just clone github repository for the example app shown in the gifs below.
+If there are any confusions just clone github repository for proper use cases & to get the example app shown in the gifs below.
 
 
 # Setting up the view
@@ -45,12 +45,7 @@ There are multiple ways to set up the curve. One way is to directly add values i
         app:y0="4.9"
         app:y1="3.5"
         app:y2="1.9"
-        app:y3="8.3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0"/>
+        app:y3="8.3"/>
 ```
 
 This results in:  
