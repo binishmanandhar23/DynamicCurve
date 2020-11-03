@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/containerStickerDialog"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/dummyDialogView"
+        android:layout_width="25dp"
+        android:layout_height="4dp"
+        android:elevation="2dp"
+        android:background="@drawable/rounded_dialog"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabsControls"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="2dp"
+        android:paddingBottom="2dp"
+        android:background="@color/color_transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dummyDialogView"
+        app:layout_constraintVertical_bias="0"
+        app:tabGravity="fill"
+        app:tabIndicator="@drawable/custom_tab_indicator"
+        app:tabIndicatorColor="@color/color_white"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="20dp"
+        app:tabMaxWidth="0dp"
+        app:tabMode="fixed"
+        app:tabPaddingEnd="10dp"
+        app:tabPaddingStart="10dp"
+        app:tabPaddingBottom="20dp"
+        app:tabSelectedTextColor="@color/color_white"
+        app:tabTextAppearance="@style/TabWidgetText"
+        app:tabTextColor="@color/color_gray" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerControls"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabsControls"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="dynamicViewMainContainer" type="id"/>
+    <item name="constraintLayoutFirstDesign" type="id"/>
+    <item name="textViewEditStatsValue" type="id"/>
+    <item name="textViewEditStatsLabel" type="id"/>
+    <item name="imageViewEditStats" type="id"/>
+</resources>

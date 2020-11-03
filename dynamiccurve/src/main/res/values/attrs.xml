@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="bgColor" format="color" />
+    <attr name="fgColor" format="color" />
+    <attr name="percent" format="float" />
+    <attr name="startAngle" format="float" />
+    <attr name="headerText" format="string" />
+    <attr name="footerText" format="integer" />
+    <attr name="imageInsideCircle" format="integer" />
+
+    <declare-styleable name="CustomTextStyle">
+        <attr name="customTextStyle" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomLetterSpacingStyle">
+        <attr name="customLetterSpacingStyle" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="Mask">
+        <attr name="mask" format="string" />
+        <attr name="curveHeight" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="Dynamic">
+        <attr name="curveColor" format="reference|color" />
+        <attr name="reverse" format="boolean"/>
+        <attr name="mirror" format="boolean"/>
+        <attr name="upsideDown" format="boolean"/>
+        <attr name="deltaDivisible" format="float"/>
+        <attr name="decreaseHeightBy" format="float"/>
+        <attr name="isInPx" format="boolean"/>
+        <attr name="x0" format="string"/>
+        <attr name="x1" format="string"/>
+        <attr name="x2" format="string"/>
+        <attr name="x3" format="string"/>
+        <attr name="y0" format="string"/>
+        <attr name="y1" format="string"/>
+        <attr name="y2" format="string"/>
+        <attr name="y3" format="string"/>
+        <attr name="x1a" format="string"/>
+        <attr name="x2a" format="string"/>
+        <attr name="x3a" format="string"/>
+        <attr name="y1a" format="string"/>
+        <attr name="y2a" format="string"/>
+        <attr name="y3a" format="string"/>
+    </declare-styleable>
+</resources>

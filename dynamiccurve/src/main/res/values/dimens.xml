@@ -1,0 +1,116 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--textsize-->
+    <dimen name="margin_left">8dp</dimen>
+    <dimen name="margin_right">8dp</dimen>
+    <dimen name="margin_right_handle">8dp</dimen>
+    <dimen name="margin_top">8dp</dimen>
+    <dimen name="margin_bottom">8dp</dimen>
+    <dimen name="icon_width">14dp</dimen>
+    <dimen name="icon_height">14dp</dimen>
+
+    <dimen name="text_hello_small">18dip</dimen>
+    <dimen name="text_hello_medium">24dip</dimen>
+    <dimen name="text_hello_large">36dip</dimen>
+    <dimen name="text_hello_xlarge">48dip</dimen>
+    <dimen name="margin_10">4.16dp</dimen> <!--10-->
+    <dimen name="margin_12">5dp</dimen> <!--12-->
+    <dimen name="margin_13">13dp</dimen>
+    <dimen name="margin_14">14dp</dimen>
+    <dimen name="margin_15">7dp</dimen> <!--15-->
+    <dimen name="margin_16">6.67dp</dimen> <!--16-->
+    <dimen name="margin_17">17dp</dimen>
+    <dimen name="margin_18">18dp</dimen>
+    <dimen name="margin_19">19dp</dimen>
+    <dimen name="margin_20">8.33dp</dimen> <!--20-->
+    <dimen name="margin_22">22dp</dimen>
+    <dimen name="margin_25">10.41dp</dimen> <!--25-->
+    <dimen name="margin_27">11.25dp</dimen> <!--27-->
+    <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_8">3.33dp</dimen> <!--8-->
+
+    <dimen name="margin_32">13.33dp</dimen> <!--32-->
+    <dimen name="margin_34">14.16dp</dimen> <!--34-->
+    <dimen name="margin_38">38dp</dimen>
+
+    <dimen name="sizeMinus20">-20dp</dimen>
+    <dimen name="sizeMinus32">-32dp</dimen>
+
+
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_12">5sp</dimen> <!--12-->
+    <dimen name="text_size_14">14sp</dimen> <!--14-->
+
+    <dimen name="text_size_15">6.25sp</dimen> <!--15-->
+    <dimen name="text_size_16">6.66sp</dimen> <!--16-->
+    <dimen name="text_size_18">7.5sp</dimen> <!--18-->
+
+    <dimen name="text_size_17">17sp</dimen>
+    <dimen name="text_size_20">8.33sp</dimen> <!--20-->
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_24">10sp</dimen> <!--24-->
+    <dimen name="text_size_26">26sp</dimen>
+    <dimen name="text_size_28">11.67sp</dimen> <!--28-->
+    <dimen name="text_size_32">32sp</dimen>
+
+    <dimen name="onboarding_button_text_size">8sp</dimen> <!--20-->
+    <dimen name="onboarding_edittext_text_size">9.16sp</dimen> <!--22-->
+    <dimen name="onboarding_title_text_size">14.5sp</dimen> <!--34.8-->
+    <dimen name="onboarding_title_congrats_text_size">9.16sp</dimen> <!--30-->
+    <dimen name="onboarding_title_margin_top">5.83sp</dimen> <!--14-->
+    <dimen name="onboarding_description_text_size">7sp</dimen> <!--16-->
+    <dimen name="onboarding_welcome_desc_text_size">6.5sp</dimen> <!--16-->
+
+    <dimen name="onboarding_curve_margin_top">95dp</dimen> <!--240-->
+    <dimen name="onboarding_curve__button_margin_top">58.33dp</dimen> <!--140-->
+    <dimen name="onboarding_curve__text_margin_bottom">13.33dp</dimen> <!--32-->
+
+    <dimen name="onboarding_buy_benefits">7sp</dimen> <!--18-->
+    <dimen name="onboarding_button_bottom_padding">4dp</dimen> <!--12-->
+    <dimen name="onboarding_button_top_padding">4dp</dimen> <!--12-->
+    <dimen name="onboarding_margin_top_57">21.66dp</dimen> <!--52-->
+    <dimen name="onboarding_margin_top_46">19.16dp</dimen> <!--46-->
+    <dimen name="onboarding_margin_top_30">12.62dp</dimen> <!--30-->
+    <dimen name="onboarding_margin_top_8">3.33dp</dimen> <!--8-->
+    <dimen name="onboarding_margin_top_66">16.67dp</dimen> <!--46-->
+
+    <dimen name="margin_30">12.5dp</dimen> <!--30-->
+    <dimen name="margin_37">37dp</dimen>
+    <dimen name="margin_4">4dp</dimen>
+    <dimen name="margin_42">17.5dp</dimen> <!--42-->
+    <dimen name="margin_50">20.83dp</dimen> <!--50-->
+    <dimen name="margin_60">24.99dp</dimen> <!--50-->b
+
+    <dimen name="top_margin_onboarding">8.33dp</dimen> <!--20-->
+    <dimen name="top_margin_settings">26dp</dimen>
+    <dimen name="top_margin_scroll_settings">100dp</dimen>
+    <dimen name="top_margin_scroll_discomforts_recycler_view">130dp</dimen>
+    <dimen name="top_margin_search_scroll_settings">130dp</dimen>
+    <dimen name="top_margin_faq">128dp</dimen> <!--307.2-->
+
+    <dimen name="top_margin_scroll_medications">75dp</dimen>
+    <dimen name="medication_button_padding_start">41dp</dimen>
+    <dimen name="medication_button_padding_end">40dp</dimen>
+
+    <dimen name="back_button_padding">10dp</dimen>
+    <dimen name="margin_6">6dp</dimen>
+    <dimen name="margin_2">2dp</dimen>
+    <dimen name="margin_40">40dp</dimen>
+    <dimen name="margin_64">26.67dp</dimen> <!--64-->
+    <dimen name="margin_24">24dp</dimen>
+    <dimen name="margin_47">19.5dp</dimen> <!--47-->
+    <dimen name="margin_80">33.33dp</dimen> <!--80-->
+    <dimen name="margin_100">41.67dp</dimen> <!--100-->
+    <dimen name="margin_116">48.33dp</dimen> <!--116-->
+    <dimen name="margin_120">50dp</dimen> <!--120-->
+    <dimen name="margin_140">58.33dp</dimen>
+    <dimen name="margin_130">54.16dp</dimen>
+    <dimen name="margin_350">350dp</dimen>
+    <dimen name="margin_250">166.67dp</dimen>
+
+    <dimen name="bottomDialogMarginStart">2dp</dimen>
+    <dimen name="bottomDialogMarginEnd">2dp</dimen>
+    <dimen name="bottomDialogMarginTop">44dp</dimen>
+    <dimen name="bottomDialogMarginBottom">0dp</dimen>
+</resources>
