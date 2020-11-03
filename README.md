@@ -94,7 +94,7 @@ val y3 = "8.3"
 dynamicCurve.changeValues(x0,y0,x1,y1,x2,y2,x3,y3)
 ```
 
-![](https://i.imgur.com/RfEurNM.gif)
+![img](https://i.imgur.com/RfEurNM.gif)
 
 
 # Retrieving values
