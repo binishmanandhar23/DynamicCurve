@@ -181,7 +181,6 @@ To add a second curve we need to change the value of x3:
 ```kotlin
 dynamicCurve.changeValues(XYControls.X3,if (secondCurveAdded) X3Type.HALF.type else X3Type.FULL.type)
 ```
-
 ## Contributions
 
 If you want to contribute or just wanna say Hi!, you can find me at:
