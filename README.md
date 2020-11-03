@@ -49,7 +49,7 @@ There are multiple ways to set up the curve. One way is to directly add values i
         app:layout_constraintVertical_bias="0"/>
 ```
 
-This results in:
+This results in:  
 ![](https://i.imgur.com/m1TYwCu.png)
 
 Or,  
