@@ -2,7 +2,7 @@
 
 [ ![Download](https://api.bintray.com/packages/binishmanandhar23/DynamicCurve/com.binish.dynamiccurve/images/download.svg?version=1.0.0) ](https://bintray.com/binishmanandhar23/DynamicCurve/com.binish.dynamiccurve/1.0.0/link) ![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg)
 
-Helps make curves easily for your app
+Making Curves has never been easier.
 
 # Installation
 
