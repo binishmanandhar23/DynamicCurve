@@ -71,7 +71,15 @@ dynamicCurve.changeValues(XYControls.Y0, "4.9")
 dynamicCurve.changeValues(XYControls.Y1, "3.5")
 dynamicCurve.changeValues(XYControls.Y2, "1.9")
 dynamicCurve.changeValues(XYControls.Y3, "8.3")
-//and so on if second curve is needed..
+//For second curve..
+/*
+dynamicCurve.changeValues(XYControls.X1a, "[value in string]")
+dynamicCurve.changeValues(XYControls.X2a, "[value in string]")
+dynamicCurve.changeValues(XYControls.X3a, "[value in string]")
+dynamicCurve.changeValues(XYControls.Y1a, "[value in string]")
+dynamicCurve.changeValues(XYControls.Y2a, "[value in string]")
+dynamicCurve.changeValues(XYControls.Y3a, "[value in string]")
+*/
 ```
 if only first curves are to be added
 ```kotlin
@@ -129,6 +137,21 @@ or,
 ```kotlin
 dynamicCurve.decreaseHeightBy("1.0") // If done programmatically the value must be in strings
 ```
+
+# Change curve color
+```bash
+app:curveColor="@color/black"
+```
+or,
+```kotlin
+dynamicCurve.changeCurveColor(ContextCompat.getColor(requireContext(), R.color.black))
+```
+
+# Change background color
+```kotlin
+dynamicCurve.changeBackgroundColor(R.color.white)
+```
+
 
 ## Callbacks
 There are two callbacks which can be useful to track reverse and/or second curve addition changes
