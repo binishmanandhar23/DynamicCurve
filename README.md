@@ -94,7 +94,7 @@ val y3 = "8.3"
 dynamicCurve.changeValues(x0,y0,x1,y1,x2,y2,x3,y3)
 ```
 
-![img](https://i.imgur.com/RfEurNM.gif)
+![](https://i.imgur.com/RfEurNM.gif)
 
 
 # Retrieving values
@@ -107,6 +107,8 @@ dynamicCurve.getValue(XYControls.X0) //This retrieves the x0 co-ordinate's value
 # Advance controls
 ## Mirroring
 (Note) For now, Mirroring doesn't work when second curve is enabled
+![](https://i.imgur.com/9bUGLmF.gif)
+
 ```bash
 app:mirror="true"
 ```
@@ -114,6 +116,10 @@ or,
 ```kotlin
 dynamicCurve.isMirrored(true) // By default false
 ```
+
+
+![](https://i.imgur.com/731OYvD.gif)
+
 ## Reversing
 ```bash
 app:reverse="true
@@ -171,6 +177,8 @@ val mainListener = object : DynamicCurve.DynamicCurveAdapter(){
 ```
 
 # (Important) Adding a second curve
+![](https://i.imgur.com/v2Myw2K.gif)
+
 To add a second curve we need to change the value of x3:
 ```kotlin
 dynamicCurve.changeValues(XYControls.X3,if (secondCurveAdded) X3Type.HALF.type else X3Type.FULL.type)
