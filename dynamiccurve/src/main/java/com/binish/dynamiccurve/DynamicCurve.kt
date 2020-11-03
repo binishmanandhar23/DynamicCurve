@@ -315,10 +315,6 @@ class DynamicCurve : ConstraintLayout {
         setBackgroundResource(colorResId)
     }
 
-    fun changeValues(dimensionArray: List<String>) {
-
-    }
-
     fun changeValues(
         x0: String,
         y0: String,
@@ -433,5 +429,6 @@ class DynamicCurve : ConstraintLayout {
 
     abstract class DynamicCurveAdapter : DynamicCurveInteraction {
         override fun isHalfWidth(halfWidth: Boolean) {}
+        override fun isReversed(reversed: Boolean) {}
     }
 }
