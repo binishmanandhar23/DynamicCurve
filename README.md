@@ -106,7 +106,7 @@ dynamicCurve.getValue(XYControls.X0) //This retrieves the x0 co-ordinate's value
 
 # Advance controls
 ## Mirroring
-(Note) For now, Mirroring doesn't work when second curve is enabled
+(Note) For now, Mirroring doesn't work when second curve is enabled  
 ![](https://i.imgur.com/9bUGLmF.gif)
 
 ```bash
@@ -116,7 +116,6 @@ or,
 ```kotlin
 dynamicCurve.isMirrored(true) // By default false
 ```
-
 
 ![](https://i.imgur.com/731OYvD.gif)
 
