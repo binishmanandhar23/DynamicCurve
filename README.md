@@ -4,7 +4,7 @@
 
 Helps make curves easily for your app
 
-## Installation
+# Installation
 
 Add the following dependencies in the gradle file of your app module to get started:
 
@@ -24,7 +24,7 @@ Maven
 
 or if you want to further customize the module, simply import it.
 
-## Setting up the view
+# Setting up the view
 
 There are multiple ways to set up the curve. One way is to directly add values in xml
 
@@ -95,15 +95,15 @@ dynamicCurve.changeValues(x0,y0,x1,y1,x2,y2,x3,y3)
 ```
 
 
-## Retrieving values
+# Retrieving values
 To retrieve values of any of the co-ordinate
 ```kotlin
 dynamicCurve.getValue(XYControls.X0) //This retrieves the x0 co-ordinate's value.
 //And so on...
 ```
 
-## Advance controls
-# Mirroring
+# Advance controls
+## Mirroring
 ```bash
 app:mirror="true"
 ```
@@ -111,16 +111,16 @@ or,
 ```kotlin
 dynamicCurve.isMirrored(true) // By default false
 ```
-# Reversing
+## Reversing
 ```bash
 app:reverse="true
 ```
 or,
 ```kotlin
-dynamicCurve.isReversed(true) // By deafault false
+dynamicCurve.isReversed(true) // By default false
 ```
 
-# Inverting
+## Inverting
 ```bash
 app:upsideDown="true"
 ```
@@ -129,7 +129,7 @@ or,
 dynamicCurve.isInverted(true) // By default false
 ```
 
-# Decrease height of the curve
+## Decrease height of the curve
 ```bash
 app:decreaseHeightBy="[float value]"
 ```
@@ -138,7 +138,7 @@ or,
 dynamicCurve.decreaseHeightBy("1.0") // If done programmatically the value must be in strings
 ```
 
-# Change curve color
+## Change curve color
 ```bash
 app:curveColor="@color/black"
 ```
@@ -147,13 +147,13 @@ or,
 dynamicCurve.changeCurveColor(ContextCompat.getColor(requireContext(), R.color.black))
 ```
 
-# Change background color
+## Change background color
 ```kotlin
 dynamicCurve.changeBackgroundColor(R.color.white)
 ```
 
 
-## Callbacks
+# Callbacks
 There are two callbacks which can be useful to track reverse and/or second curve addition changes
 ```kotlin
 val mainListener = object : DynamicCurve.DynamicCurveAdapter(){
@@ -167,7 +167,7 @@ val mainListener = object : DynamicCurve.DynamicCurveAdapter(){
                 }
 ```
 
-## Adding a second curve
+# Adding a second curve
 To add a second curve we need to change the value of x3:
 ```kotlin
 dynamicCurve.changeValues(XYControls.X3,if (secondCurveAdded) X3Type.HALF.type else X3Type.FULL.type)
