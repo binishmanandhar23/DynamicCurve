@@ -24,6 +24,10 @@ Maven
 
 or if you want to further customize the module, simply import it.
 
+## Note
+If there are any confusions just clone github repository for the example app shown in the gifs below.
+
+
 # Setting up the view
 
 There are multiple ways to set up the curve. One way is to directly add values in xml
