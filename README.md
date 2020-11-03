@@ -182,6 +182,13 @@ To add a second curve we need to change the value of x3:
 dynamicCurve.changeValues(XYControls.X3,if (secondCurveAdded) X3Type.HALF.type else X3Type.FULL.type)
 ```
 
+## Contributions
+
+If you want to contribute or just wanna say Hi!, you can find me at:
+1. [LinkedIn](https://www.linkedin.com/in/binish-manandhar-3136621b2/)
+2. [Facebook](https://www.facebook.com/binish.manandhar)
+3. [Twitter](https://twitter.com/NotBinish)
+
 
 
 
