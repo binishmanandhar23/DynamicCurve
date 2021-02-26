@@ -18,6 +18,11 @@ class DynamicCurve : ConstraintLayout {
     internal var cx1 = 0f
     internal var cx2 = 0f
 
+    var shadowEnabled = false
+    var shadowRadius = 2f
+    var shadowDx = 1f
+    var shadowDy = 1f
+    var shadowColor = R.color.shadow_color
     var reverse: Boolean = false
     var mirror: Boolean = false
     var upsideDown: Boolean = false
@@ -56,19 +61,26 @@ class DynamicCurve : ConstraintLayout {
 
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
         this.mContext = context
-        val attribute = context.obtainStyledAttributes(attributeSet, R.styleable.Dynamic)
+        val attribute = context.obtainStyledAttributes(attributeSet, R.styleable.DynamicCurve)
         val curveColor = attribute.getColor(
-            R.styleable.Dynamic_curveColor,
+            R.styleable.DynamicCurve_curveColor,
             ContextCompat.getColor(context, R.color.color_white)
         )
-        mirror = attribute.getBoolean(R.styleable.Dynamic_mirror, false)
-        reverse = attribute.getBoolean(R.styleable.Dynamic_reverse, false)
-        upsideDown = attribute.getBoolean(R.styleable.Dynamic_upsideDown, false)
+
+        shadowEnabled = attribute.getBoolean(R.styleable.DynamicCurve_enableShadow, false)
+        shadowRadius = attribute.getFloat(R.styleable.DynamicCurve_shadowRadius, 2f)
+        shadowDx = attribute.getFloat(R.styleable.DynamicCurve_shadowDx, 1f)
+        shadowDy = attribute.getFloat(R.styleable.DynamicCurve_shadowDy, 1f)
+        shadowColor = attribute.getResourceId(R.styleable.DynamicCurve_shadowColor, R.color.shadow_color)
+
+        mirror = attribute.getBoolean(R.styleable.DynamicCurve_mirror, false)
+        reverse = attribute.getBoolean(R.styleable.DynamicCurve_reverse, false)
+        upsideDown = attribute.getBoolean(R.styleable.DynamicCurve_upsideDown, false)
         upsideDownCalculated = !upsideDown
-        decreaseHeightBy = attribute.getFloat(R.styleable.Dynamic_decreaseHeightBy, 0f)
-        isInPx = attribute.getBoolean(R.styleable.Dynamic_isInPx, false)
+        decreaseHeightBy = attribute.getFloat(R.styleable.DynamicCurve_decreaseHeightBy, 0f)
+        isInPx = attribute.getBoolean(R.styleable.DynamicCurve_isInPx, false)
         paintColor = curveColor
-        deltaDivisible = attribute.getFloat(R.styleable.Dynamic_deltaDivisible, 10f)
+        deltaDivisible = attribute.getFloat(R.styleable.DynamicCurve_deltaDivisible, 10f)
 
         initializeXY(attribute)
 
@@ -82,7 +94,7 @@ class DynamicCurve : ConstraintLayout {
         defStyleAttr
     ) {
         this.mContext = context
-        val attribute = context.obtainStyledAttributes(attrs, R.styleable.Dynamic)
+        val attribute = context.obtainStyledAttributes(attrs, R.styleable.DynamicCurve)
         initializeXY(attribute)
         init()
     }
@@ -97,8 +109,10 @@ class DynamicCurve : ConstraintLayout {
         //        paint.setStrokeWidth(4);
 
         //For Shadows
-        /*paint!!.setShadowLayer(8f, 1f, 1f, Color.GRAY);
-        setLayerType(LAYER_TYPE_SOFTWARE, paint);*/
+        if(shadowEnabled) {
+            paint!!.setShadowLayer(shadowRadius, shadowDx, shadowDy, shadowColor)
+            setLayerType(LAYER_TYPE_SOFTWARE, paint)
+        }
 
 
         path = Path()
@@ -233,50 +247,50 @@ class DynamicCurve : ConstraintLayout {
 
     private fun initializeXY(attribute: TypedArray?) {
         x0 =
-            if (attribute != null) checkStringValues(attribute.getString(R.styleable.Dynamic_x0))
+            if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x0))
                 ?: 0f else 0f
         x1 =
-            if (attribute != null) checkStringValues(attribute.getString(R.styleable.Dynamic_x1))
+            if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x1))
                 ?: 0f else 0f
         x2 =
-            if (attribute != null) checkStringValues(attribute.getString(R.styleable.Dynamic_x2))
+            if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x2))
                 ?: 0f else 0f
         x3 = if (attribute != null) checkStringValues(
-            attribute.getString(R.styleable.Dynamic_x3),
+            attribute.getString(R.styleable.DynamicCurve_x3),
             true
         ) else null
 
         y0 =
-            if (attribute != null) checkFullHeight(attribute.getString(R.styleable.Dynamic_y0))
+            if (attribute != null) checkFullHeight(attribute.getString(R.styleable.DynamicCurve_y0))
                 ?: 0f else 0f
         y1 =
-            if (attribute != null) checkFullHeight(attribute.getString(R.styleable.Dynamic_y1))
+            if (attribute != null) checkFullHeight(attribute.getString(R.styleable.DynamicCurve_y1))
                 ?: 0f else 0f
         y2 =
-            if (attribute != null) checkFullHeight(attribute.getString(R.styleable.Dynamic_y2))
+            if (attribute != null) checkFullHeight(attribute.getString(R.styleable.DynamicCurve_y2))
                 ?: 0f else 0f
         y3 =
-            if (attribute != null) checkFullHeight(attribute.getString(R.styleable.Dynamic_y3))
+            if (attribute != null) checkFullHeight(attribute.getString(R.styleable.DynamicCurve_y3))
                 ?: 0f else 0f
 
         if (x3 == null) {
             x1a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.Dynamic_x1a))
+                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x1a))
                     ?: 0f else 0f
             x2a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.Dynamic_x2a))
+                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x2a))
                     ?: 0f else 0f
             x3a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.Dynamic_x3a))
+                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x3a))
                     ?: 0f else 0f
             y1a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.Dynamic_y1a))
+                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_y1a))
                     ?: 0f else 0f
             y2a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.Dynamic_y2a))
+                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_y2a))
                     ?: 0f else 0f
             y3a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.Dynamic_y3a))
+                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_y3a))
                     ?: 0f else 0f
         }
     }
@@ -377,6 +391,30 @@ class DynamicCurve : ConstraintLayout {
             XYControls.Y2a -> this.y2a
             XYControls.Y3a -> this.y3a
         } ?: 0.0f
+    }
+
+    fun isShadow(value: Boolean){
+        shadowEnabled = value
+        init()
+        invalidate()
+    }
+
+    fun setCurveShadowRadius(value: Float){
+        shadowRadius = value
+        init()
+        invalidate()
+    }
+
+    fun setCurveShadowDx(value: Float){
+        shadowDx = value
+        init()
+        invalidate()
+    }
+
+    fun setCurveShadowDy(value: Float){
+        shadowDy = value
+        init()
+        invalidate()
     }
 
     fun isMirrored(value: Boolean) {

@@ -106,5 +106,6 @@
     <color name="colorLightPeach">#ffcdaa</color>
     <color name="colorEditButtonBlack">#333333</color>
 
+    <color name="shadow_color">#0D000000</color>
 
 </resources>

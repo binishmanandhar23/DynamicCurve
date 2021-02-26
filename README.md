@@ -159,6 +159,14 @@ dynamicCurve.changeCurveColor(ContextCompat.getColor(requireContext(), R.color.b
 dynamicCurve.changeBackgroundColor(R.color.white)
 ```
 
+## Enable shadow for the curve and change it's radius, dx value & dy value
+```kotlin
+dynamicCurve.isShadow(true) //By default false
+dynamicCurve.setCurveShadowRadius(2f) // By default 2f
+dynamicCurve.setCurveShadowDx(1f) // ByDefault 1f
+dynamicCurve.setCurveShadowDy(1f) // ByDefault 1f
+```
+
 
 # Callbacks
 There are two callbacks which can be useful to track reverse and/or second curve addition changes

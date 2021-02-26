@@ -93,4 +93,30 @@
         app:layout_constraintVertical_bias="0.04"
         />
 
+    <CheckBox
+        android:id="@+id/checkboxEnableShadow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shadow"
+        android:textColor="@color/color_white"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintVertical_bias="0.08"
+        app:layout_constraintStart_toStartOf="@id/checkboxReverse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seekBarDecreaseHeightBy"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <SeekBar
+        android:id="@+id/seekBarShadowRadius"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/textViewDecreaseHeightBy"
+        app:layout_constraintEnd_toStartOf="@id/recyclerViewCurveColor"
+        app:layout_constraintTop_toBottomOf="@id/checkboxEnableShadow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.04"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -168,9 +168,21 @@ object Utils {
         return floatVal
     }
 
+    fun getConvertedValueForShadows(intVal: Int): Float {
+        var floatVal = 0.0f
+        floatVal = .2f * intVal
+        return floatVal
+    }
+
     fun getValueInInt(floatVal: Float): Int {
         var intVal = 0
         intVal = (floatVal / .1f).toInt()
+        return intVal
+    }
+
+    fun getValueInIntForShadows(floatVal: Float): Int {
+        var intVal = 0
+        intVal = (floatVal / .2f).toInt()
         return intVal
     }
 }

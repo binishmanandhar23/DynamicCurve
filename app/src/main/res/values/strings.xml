@@ -22,6 +22,7 @@
     <string name="reverse">Reverse</string>
     <string name="mirror">Mirror</string>
     <string name="upsideDown">UpsideDown</string>
+    <string name="shadow">Shadow</string>
     <string name="decreaseHeightBy">Decrease Height By</string>
     <string name="curveColor">Curve Color</string>
 

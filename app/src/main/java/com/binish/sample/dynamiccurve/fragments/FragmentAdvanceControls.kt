@@ -38,6 +38,30 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
             curve.isInverted(isChecked)
         }
 
+        checkboxEnableShadow.isChecked = curve.shadowEnabled
+        checkboxEnableShadow.setOnCheckedChangeListener { _, isChecked ->
+            curve.isShadow(isChecked)
+            seekBarShadowRadius.visibility = if(isChecked) View.VISIBLE else View.GONE
+        }
+
+        seekBarShadowRadius.visibility = if(curve.shadowEnabled) View.VISIBLE else View.GONE
+        seekBarDecreaseHeightBy.progress = Utils.getValueInIntForShadows(curve.shadowRadius)
+        seekBarShadowRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if(fromUser)
+                    curve.setCurveShadowRadius(Utils.getConvertedValueForShadows(progress))
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+        })
+
         recyclerViewCurveColor.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recyclerViewCurveColor.adapter = AdvanceControlColorAdapter(

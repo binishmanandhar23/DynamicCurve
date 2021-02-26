@@ -21,8 +21,13 @@
         <attr name="curveHeight" format="string"/>
     </declare-styleable>
 
-    <declare-styleable name="Dynamic">
+    <declare-styleable name="DynamicCurve">
         <attr name="curveColor" format="reference|color" />
+        <attr name="enableShadow" format="boolean"/>
+        <attr name="shadowRadius" format="float"/>
+        <attr name="shadowDx" format="float"/>
+        <attr name="shadowDy" format="float"/>
+        <attr name="shadowColor" format="reference"/>
         <attr name="reverse" format="boolean"/>
         <attr name="mirror" format="boolean"/>
         <attr name="upsideDown" format="boolean"/>
