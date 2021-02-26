@@ -1,6 +1,6 @@
 # DynamicCurve
 
-[ ![Download](https://api.bintray.com/packages/binishmanandhar23/DynamicCurve/com.binish.dynamiccurve/images/download.svg?version=1.0.1) ](https://bintray.com/binishmanandhar23/DynamicCurve/com.binish.dynamiccurve/1.0.1/link) ![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg)
+[ ![Download](https://api.bintray.com/packages/binishmanandhar23/DynamicCurve/com.binish.dynamiccurve/images/download.svg?version=1.1.0) ](https://bintray.com/binishmanandhar23/DynamicCurve/com.binish.dynamiccurve/1.1.0/link) ![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg)
 
 Making Curves has never been easier.
 
@@ -10,14 +10,14 @@ Add the following dependencies in the gradle file of your app module to get star
 
 Gradle
 ```kotlin
-implementation 'com.binish.dynamiccurve:dynamiccurve:1.0.1'
+implementation 'com.binish.dynamiccurve:dynamiccurve:1.1.0'
 ```
 Maven
 ```xml
 <dependency>
   <groupId>com.binish.dynamiccurve</groupId>
   <artifactId>dynamiccurve</artifactId>
-  <version>1.0.1</version>
+  <version>1.1.0</version>
   <type>pom</type>
 </dependency>
 ```
