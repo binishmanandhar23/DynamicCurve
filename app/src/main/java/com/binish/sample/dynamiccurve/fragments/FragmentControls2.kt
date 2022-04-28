@@ -11,18 +11,20 @@ import com.binish.dynamiccurve.enums.X3Type
 import com.binish.dynamiccurve.enums.XYControls
 import com.binish.sample.dynamiccurve.R
 import com.binish.sample.dynamiccurve.adapters.ControlAdapter
+import com.binish.sample.dynamiccurve.databinding.FragmentControlsBinding
 import com.binish.sample.dynamiccurve.model.XYControlValue
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_controls.*
 
 class FragmentControls2(val listener: DynamicCurve.DynamicCurveAdapter) : Fragment() {
+    private var _binding: FragmentControlsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_controls, container, false)
+        _binding = FragmentControlsBinding.inflate(inflater,container, false)
+        return _binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,23 +33,23 @@ class FragmentControls2(val listener: DynamicCurve.DynamicCurveAdapter) : Fragme
             getXYList(),
             object : ControlAdapter.ControlAdapterInteraction {
                 override fun onValueChanged(xyControlValue: XYControlValue) {
-                    requireActivity().dynamicCurve.changeValues(
+                    getView<DynamicCurve>(R.id.dynamicCurve).changeValues(
                         xyControlValue.xyControl!!,
                         String.format("%.1f", xyControlValue.xyValue)
                     )
                 }
             })
 
-        checkBoxEnableSecondCurve.visibility = View.VISIBLE
-        checkBoxEnableSecondCurve.isChecked = requireActivity().dynamicCurve.halfWidth
-        control2Adapter.isEnabled(requireActivity().dynamicCurve.halfWidth)
-        requireActivity().dynamicCurve.setUpListener(listener)
-        recyclerViewControl1.layoutManager =
+        binding.checkBoxEnableSecondCurve.visibility = View.VISIBLE
+        binding.checkBoxEnableSecondCurve.isChecked = getView<DynamicCurve>(R.id.dynamicCurve).halfWidth
+        control2Adapter.isEnabled(getView<DynamicCurve>(R.id.dynamicCurve).halfWidth)
+        getView<DynamicCurve>(R.id.dynamicCurve).setUpListener(listener)
+        binding.recyclerViewControl1.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerViewControl1.adapter = control2Adapter
+        binding.recyclerViewControl1.adapter = control2Adapter
 
-        checkBoxEnableSecondCurve.setOnCheckedChangeListener { _, isChecked ->
-            requireActivity().dynamicCurve.changeValues(
+        binding.checkBoxEnableSecondCurve.setOnCheckedChangeListener { _, isChecked ->
+            getView<DynamicCurve>(R.id.dynamicCurve).changeValues(
                 XYControls.X3,
                 if (isChecked) X3Type.HALF.type else X3Type.FULL.type
             )
@@ -67,7 +69,7 @@ class FragmentControls2(val listener: DynamicCurve.DynamicCurveAdapter) : Fragme
     }
 
     private fun getValueFromCurve(xyType: XYControls): Float {
-        return requireActivity().dynamicCurve.getValue(xyType)
+        return getView<DynamicCurve>(R.id.dynamicCurve).getValue(xyType)
     }
 
     companion object {
@@ -78,4 +80,6 @@ class FragmentControls2(val listener: DynamicCurve.DynamicCurveAdapter) : Fragme
                 }
             }
     }
+    
+    private fun <T> getView(viewId: Int): T = requireActivity().findViewById(viewId) as T
 }

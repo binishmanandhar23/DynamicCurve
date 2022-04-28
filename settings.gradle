@@ -1,0 +1,3 @@
+include ':dynamiccurve'
+include ':app'
+rootProject.name = "DynamicCurve"

@@ -10,18 +10,20 @@ import com.binish.dynamiccurve.DynamicCurve
 import com.binish.dynamiccurve.enums.XYControls
 import com.binish.sample.dynamiccurve.R
 import com.binish.sample.dynamiccurve.adapters.ControlAdapter
+import com.binish.sample.dynamiccurve.databinding.FragmentControlsBinding
 import com.binish.sample.dynamiccurve.model.XYControlValue
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_controls.*
 
 class FragmentControls1(private val listener: DynamicCurve.DynamicCurveAdapter) : Fragment() {
+    private var _binding: FragmentControlsBinding? = null
+    val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_controls, container, false)
+        _binding = FragmentControlsBinding.inflate(inflater,container, false)
+        return _binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,16 +32,16 @@ class FragmentControls1(private val listener: DynamicCurve.DynamicCurveAdapter) 
             getXYList(),
             object : ControlAdapter.ControlAdapterInteraction {
                 override fun onValueChanged(xyControlValue: XYControlValue) {
-                    requireActivity().dynamicCurve.changeValues(
+                    getView<DynamicCurve>(R.id.dynamicCurve).changeValues(
                         xyControlValue.xyControl!!,
                         String.format("%.1f", xyControlValue.xyValue)
                     )
                 }
             })
-        requireActivity().dynamicCurve.setUpListener(listener)
-        recyclerViewControl1.layoutManager =
+        getView<DynamicCurve>(R.id.dynamicCurve).setUpListener(listener)
+        binding.recyclerViewControl1.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerViewControl1.adapter = control1Adapter
+        binding.recyclerViewControl1.adapter = control1Adapter
     }
 
     private fun getXYList(): ArrayList<XYControlValue> {
@@ -56,7 +58,7 @@ class FragmentControls1(private val listener: DynamicCurve.DynamicCurveAdapter) 
     }
 
     private fun getValueFromCurve(xyType: XYControls): Float {
-        return requireActivity().dynamicCurve.getValue(xyType)
+        return getView<DynamicCurve>(R.id.dynamicCurve).getValue(xyType)
     }
 
     companion object {
@@ -66,4 +68,6 @@ class FragmentControls1(private val listener: DynamicCurve.DynamicCurveAdapter) 
             }
         }
     }
+
+    private fun <T> getView(viewId: Int): T = requireActivity().findViewById(viewId) as T
 }

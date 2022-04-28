@@ -15,16 +15,18 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.binish.dynamiccurve.DynamicCurve
 import com.binish.sample.dynamiccurve.R
 import com.binish.sample.dynamiccurve.adapters.ControlAdapter
+import com.binish.sample.dynamiccurve.databinding.LayoutBottomSheetStickerDialogBinding
 import com.binish.sample.dynamiccurve.utils.Utils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fragment_controls.*
-import kotlinx.android.synthetic.main.layout_bottom_sheet_sticker_dialog.*
 
 class BottomSheetController(val listener: BottomMapDetailFragmentInteraction) :
     BottomSheetDialogFragment() {
+    private var _binding: LayoutBottomSheetStickerDialogBinding?= null
+    private val binding get() = _binding!!
+
     private var root: View? = null
     private var paintColor: Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,29 +41,17 @@ class BottomSheetController(val listener: BottomMapDetailFragmentInteraction) :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        root = inflater.inflate(R.layout.layout_bottom_sheet_sticker_dialog, container, false)
+        _binding = LayoutBottomSheetStickerDialogBinding.inflate(inflater, container, false)
+        root = _binding?.root
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewPagerControls.adapter = ControlViewPagerAdapter(this)
-        TabLayoutMediator(tabsControls, viewPagerControls) { tab, position ->
-            when (position) {
-                0 -> tab.text = "Controls 1"
-                1 -> tab.text = "Controls 2"
-                2 -> tab.text = "Advance Controls"
-            }
-        }.attach()
-    }
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        (view?.parent as View).setBackgroundColor(Color.TRANSPARENT)
+        (view.parent as View).setBackgroundColor(Color.TRANSPARENT)
 
         val resources = resources
         if (resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
-            val parent = view?.parent as View
+            val parent = view.parent as View
             val layoutParams = parent.layoutParams as CoordinatorLayout.LayoutParams
             layoutParams.setMargins(
                 resources.getDimensionPixelSize(R.dimen.bottomDialogMarginStart), // LEFT
@@ -71,7 +61,17 @@ class BottomSheetController(val listener: BottomMapDetailFragmentInteraction) :
             )
             parent.layoutParams = layoutParams
         }
+
+        binding.viewPagerControls.adapter = ControlViewPagerAdapter(this)
+        TabLayoutMediator(binding.tabsControls, binding.viewPagerControls) { tab, position ->
+            when (position) {
+                0 -> tab.text = "Controls 1"
+                1 -> tab.text = "Controls 2"
+                2 -> tab.text = "Advance Controls"
+            }
+        }.attach()
     }
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -155,8 +155,8 @@ class BottomSheetController(val listener: BottomMapDetailFragmentInteraction) :
             return if (mainListener == null) {
                 mainListener = object : DynamicCurve.DynamicCurveAdapter(){
                     override fun isHalfWidth(halfWidth: Boolean) {
-                        checkBoxEnableSecondCurve.isChecked = halfWidth
-                        (control1Fragment?.recyclerViewControl1?.adapter as ControlAdapter).isHalfWidth(halfWidth)
+                        control1Fragment?.binding?.checkBoxEnableSecondCurve?.isChecked = halfWidth
+                        (control1Fragment?.binding?.recyclerViewControl1?.adapter as ControlAdapter).isHalfWidth(halfWidth)
                     }
 
                     override fun isReversed(reversed: Boolean) {

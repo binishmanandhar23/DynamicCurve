@@ -8,45 +8,49 @@ import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.binish.dynamiccurve.DynamicCurve
 import com.binish.sample.dynamiccurve.R
 import com.binish.sample.dynamiccurve.adapters.AdvanceControlColorAdapter
+import com.binish.sample.dynamiccurve.databinding.FragmentAdvanceControlsBinding
 import com.binish.sample.dynamiccurve.utils.Utils
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_advance_controls.*
 
 class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) : Fragment() {
+    private var _binding: FragmentAdvanceControlsBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_advance_controls, container, false)
+        _binding = FragmentAdvanceControlsBinding.inflate(inflater, container, false)
+        return _binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val curve = requireActivity().dynamicCurve
-        checkboxReverse.isChecked = curve.reverse
-        checkboxReverse.setOnCheckedChangeListener { _, isChecked ->
+        val curve = getView<DynamicCurve>(R.id.dynamicCurve)
+        binding.checkboxReverse.isChecked = curve.reverse
+        binding.checkboxReverse.setOnCheckedChangeListener { _, isChecked ->
             curve.isReversed(isChecked)
         }
-        checkboxMirror.isChecked = curve.mirror
-        checkboxMirror.setOnCheckedChangeListener { _, isChecked ->
+        binding.checkboxMirror.isChecked = curve.mirror
+        binding.checkboxMirror.setOnCheckedChangeListener { _, isChecked ->
             curve.isMirrored(isChecked)
         }
-        checkboxMirror.isChecked = curve.upsideDown
-        checkboxUpsideDown.setOnCheckedChangeListener { _, isChecked ->
+        binding.checkboxMirror.isChecked = curve.upsideDown
+        binding.checkboxUpsideDown.setOnCheckedChangeListener { _, isChecked ->
             curve.isInverted(isChecked)
         }
 
-        checkboxEnableShadow.isChecked = curve.shadowEnabled
-        checkboxEnableShadow.setOnCheckedChangeListener { _, isChecked ->
+        binding.checkboxEnableShadow.isChecked = curve.shadowEnabled
+        binding.checkboxEnableShadow.setOnCheckedChangeListener { _, isChecked ->
             curve.isShadow(isChecked)
-            seekBarShadowRadius.visibility = if(isChecked) View.VISIBLE else View.GONE
+            binding.seekBarShadowRadius.visibility = if(isChecked) View.VISIBLE else View.GONE
         }
 
-        seekBarShadowRadius.visibility = if(curve.shadowEnabled) View.VISIBLE else View.GONE
-        seekBarDecreaseHeightBy.progress = Utils.getValueInIntForShadows(curve.shadowRadius)
-        seekBarShadowRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        binding.seekBarShadowRadius.visibility = if(curve.shadowEnabled) View.VISIBLE else View.GONE
+        binding.seekBarDecreaseHeightBy.progress = Utils.getValueInIntForShadows(curve.shadowRadius)
+        binding.seekBarShadowRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if(fromUser)
                     curve.setCurveShadowRadius(Utils.getConvertedValueForShadows(progress))
@@ -62,14 +66,14 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
 
         })
 
-        recyclerViewCurveColor.layoutManager =
+        binding.recyclerViewCurveColor.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerViewCurveColor.adapter = AdvanceControlColorAdapter(
+        binding.recyclerViewCurveColor.adapter = AdvanceControlColorAdapter(
             requireContext(),
             Utils.getColors(),
             getSelectedIndex(Utils.getColors())
         ) {
-            requireActivity().dynamicCurve.changeCurveColor(
+            getView<DynamicCurve>(R.id.dynamicCurve).changeCurveColor(
                 ContextCompat.getColor(
                     requireContext(),
                     it
@@ -78,8 +82,8 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
             listener.onColorPicked(it)
         }
 
-        seekBarDecreaseHeightBy.progress = Utils.getValueInInt(-curve.decreaseHeightBy)
-        seekBarDecreaseHeightBy.setOnSeekBarChangeListener(object :
+        binding.seekBarDecreaseHeightBy.progress = Utils.getValueInInt(-curve.decreaseHeightBy)
+        binding.seekBarDecreaseHeightBy.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser)
@@ -101,7 +105,7 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
         var selectedIndex = 0
         for (i in colorList.indices) {
             val color = colorList[i]
-            if (requireActivity().dynamicCurve.paintColor == ContextCompat.getColor(
+            if (getView<DynamicCurve>(R.id.dynamicCurve).paintColor == ContextCompat.getColor(
                     requireContext(),
                     color
                 )
@@ -123,4 +127,6 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
                 }
             }
     }
+
+    private fun <T> getView(viewId: Int): T = requireActivity().findViewById(viewId) as T
 }

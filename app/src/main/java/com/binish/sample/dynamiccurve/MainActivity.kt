@@ -2,17 +2,20 @@ package com.binish.sample.dynamiccurve
 
 import android.os.Bundle
 import android.view.WindowManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.app.AppCompatActivity
+import com.binish.sample.dynamiccurve.databinding.ActivityMainBinding
 import com.binish.sample.dynamiccurve.fragments.BottomSheetController
 import com.binish.sample.dynamiccurve.utils.Utils
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         Utils.changeStatusBarColor(this,true, R.color.color_white)
 
@@ -21,7 +24,7 @@ class MainActivity : AppCompatActivity() {
             val bottomSheetStickerDialog = BottomSheetController.newInstance(object :
                 BottomSheetController.Companion.BottomMapDetailFragmentInteraction {
 
-            }, dynamicCurve.paintColor)
+            }, binding.dynamicCurve.paintColor)
             bottomSheetStickerDialog.show(supportFragmentManager, "BottomSheetController")
         }
     }
