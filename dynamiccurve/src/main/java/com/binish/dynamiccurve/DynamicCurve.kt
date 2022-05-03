@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.binish.dynamiccurve.data.CurveProperties
+import com.binish.dynamiccurve.data.CurveValues
 import com.binish.dynamiccurve.enums.XYControls
 
 class DynamicCurve : ConstraintLayout {
@@ -20,24 +21,9 @@ class DynamicCurve : ConstraintLayout {
     internal var cx2 = 0f
 
     var curveProperties = CurveProperties()
+    var curveValue = CurveValues()
 
-    private var x0: Float? = 0.0f
-    private var x1: Float? = 0.0f
-    private var x2: Float? = 0.0f
-    private var x3: Float? = 0.0f
-    private var y0: Float? = 0.0f
-    private var y1: Float? = 0.0f
-    private var y2: Float? = 0.0f
-    private var y3: Float? = 0.0f
 
-    private var x1a: Float? = 0.0f
-    private var x2a: Float? = 0.0f
-    private var x3a: Float? = 0.0f
-    private var y1a: Float? = 0.0f
-    private var y2a: Float? = 0.0f
-    private var y3a: Float? = 0.0f
-
-    private var upsideDownCalculated: Boolean = true
     private var listener: DynamicCurveAdapter? = null
 
     var paintColor: Int = ContextCompat.getColor(context, R.color.color_orange)
@@ -107,7 +93,12 @@ class DynamicCurve : ConstraintLayout {
 
         //For Shadows
         if (curveProperties.shadowEnabled) {
-            paint!!.setShadowLayer(curveProperties.shadowRadius, curveProperties.shadowDx, curveProperties.shadowDy, ContextCompat.getColor(context, curveProperties.shadowColor))
+            paint!!.setShadowLayer(
+                curveProperties.shadowRadius,
+                curveProperties.shadowDx,
+                curveProperties.shadowDy,
+                ContextCompat.getColor(context, curveProperties.shadowColor)
+            )
             setLayerType(LAYER_TYPE_SOFTWARE, paint)
         }
 
@@ -132,66 +123,68 @@ class DynamicCurve : ConstraintLayout {
 
         ifUpsideDown(height.toFloat(), delta) //For upSideDown
 
-        path?.moveTo(
-            if (curveProperties.isInPx) dp2px(x0!!) else x0!! * delta,
-            when {
-                y0 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
-                curveProperties.isInPx -> dp2px(
-                    y0!! - curveProperties.decreaseHeightBy
-                )
-                else -> (y0!! - curveProperties.decreaseHeightBy) * delta
-            }
-        )
-        path?.cubicTo(
-            if (curveProperties.isInPx) dp2px(x1!!) else x1!! * delta,
-            when {
-                y1 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
-                curveProperties.isInPx -> dp2px(y1!! - curveProperties.decreaseHeightBy)
-                else -> (y1!! - curveProperties.decreaseHeightBy) * delta
-            },
-            if (curveProperties.isInPx) dp2px(x2!!) else x2!! * delta,
-            when {
-                y2 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
-                curveProperties.isInPx -> dp2px(
-                    y2!! - curveProperties.decreaseHeightBy
-                )
-                else -> (y2!! - curveProperties.decreaseHeightBy) * delta
-            },
-            if (x3 == null && !curveProperties.halfWidth) width.toFloat() else if (x3 == null && curveProperties.halfWidth) width.toFloat() / 2 else if (curveProperties.isInPx) dp2px(
-                x3!!
-            ) else x3!! * delta,
-            when {
-                y3 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
-                curveProperties.isInPx -> dp2px(
-                    y3!! - curveProperties.decreaseHeightBy
-                )
-                else -> (y3!! - curveProperties.decreaseHeightBy) * delta
-            }
-        )
-
-        if (x3 == null && curveProperties.halfWidth) {
-            path?.cubicTo(
-                if (curveProperties.isInPx) dp2px(x1a!!) else x1a!! * delta,
-                if (curveProperties.isInPx) dp2px(y1a!! - curveProperties.decreaseHeightBy) else (y1a!! - curveProperties.decreaseHeightBy) * delta,
-                if (curveProperties.isInPx) dp2px(x2a!!) else x2a!! * delta,
-                if (curveProperties.isInPx) dp2px(y2a!! - curveProperties.decreaseHeightBy) else (y2a!! - curveProperties.decreaseHeightBy) * delta,
-                width.toFloat(),
-                if (curveProperties.isInPx) dp2px(y3a!! - curveProperties.decreaseHeightBy) else (y3a!! - curveProperties.decreaseHeightBy) * delta
+        curveValue.run {
+            path?.moveTo(
+                if (curveProperties.isInPx) dp2px(x0!!) else x0!! * delta,
+                when {
+                    y0 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
+                    curveProperties.isInPx -> dp2px(
+                        y0!! - curveProperties.decreaseHeightBy
+                    )
+                    else -> (y0!! - curveProperties.decreaseHeightBy) * delta
+                }
             )
-        }
+            path?.cubicTo(
+                if (curveProperties.isInPx) dp2px(x1!!) else x1!! * delta,
+                when {
+                    y1 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
+                    curveProperties.isInPx -> dp2px(y1!! - curveProperties.decreaseHeightBy)
+                    else -> (y1!! - curveProperties.decreaseHeightBy) * delta
+                },
+                if (curveProperties.isInPx) dp2px(x2!!) else x2!! * delta,
+                when {
+                    y2 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
+                    curveProperties.isInPx -> dp2px(
+                        y2!! - curveProperties.decreaseHeightBy
+                    )
+                    else -> (y2!! - curveProperties.decreaseHeightBy) * delta
+                },
+                if (x3 == null && !curveProperties.halfWidth) width.toFloat() else if (x3 == null && curveProperties.halfWidth) width.toFloat() / 2 else if (curveProperties.isInPx) dp2px(
+                    x3!!
+                ) else x3!! * delta,
+                when {
+                    y3 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
+                    curveProperties.isInPx -> dp2px(
+                        y3!! - curveProperties.decreaseHeightBy
+                    )
+                    else -> (y3!! - curveProperties.decreaseHeightBy) * delta
+                }
+            )
 
-        if (curveProperties.reverse) {
-            path?.lineTo(width.toFloat(), 0f)
-            path?.lineTo(0f, 0f)
-        } else {
-            path?.lineTo(width.toFloat(), height.toFloat())
+            if (x3 == null && curveProperties.halfWidth) {
+                path?.cubicTo(
+                    if (curveProperties.isInPx) dp2px(x1a!!) else x1a!! * delta,
+                    if (curveProperties.isInPx) dp2px(y1a!! - curveProperties.decreaseHeightBy) else (y1a!! - curveProperties.decreaseHeightBy) * delta,
+                    if (curveProperties.isInPx) dp2px(x2a!!) else x2a!! * delta,
+                    if (curveProperties.isInPx) dp2px(y2a!! - curveProperties.decreaseHeightBy) else (y2a!! - curveProperties.decreaseHeightBy) * delta,
+                    width.toFloat(),
+                    if (curveProperties.isInPx) dp2px(y3a!! - curveProperties.decreaseHeightBy) else (y3a!! - curveProperties.decreaseHeightBy) * delta
+                )
+            }
+
+            if (curveProperties.reverse) {
+                path?.lineTo(width.toFloat(), 0f)
+                path?.lineTo(0f, 0f)
+            } else {
+                path?.lineTo(width.toFloat(), height.toFloat())
+                path?.lineTo(0f, height.toFloat())
+            }
+
             path?.lineTo(0f, height.toFloat())
+            path?.close()
+
+            canvas?.drawPath(path!!, paint!!)
         }
-
-        path?.lineTo(0f, height.toFloat())
-        path?.close()
-
-        canvas?.drawPath(path!!, paint!!)
     }
 
     private fun dp2px(dp: Float): Float {
@@ -200,39 +193,42 @@ class DynamicCurve : ConstraintLayout {
 
     private fun ifMirrored() {
         //NOTE: '*' means un-mirrored value
-        val dummyX1 = x1
-        val dummyX2 = x2
-        val dummyY0 = y0
-        val dummyY1 = y1
-        val dummyY2 = y2
-        val dummyY3 = y3
-        x1 = if (x2 != null) curveProperties.deltaDivisible - dummyX2!! else x1 //If mirrored -> [width - x2*]
-        x2 = if (x1 != null) curveProperties.deltaDivisible - dummyX1!! else x2 //If mirrored -> [width - x1*]
-        y0 = if (y3 != null) dummyY3 else y0 //If mirrored -> y3*
-        y1 = if (y2 != null) dummyY2 else y1 //If mirrored -> y2*
-        y2 = if (y1 != null) dummyY1 else y2 //If mirrored -> y1*
-        y3 = if (y0 != null) dummyY0 else y3//If mirrored -> y0*
+        val dummyX1 = curveValue.x1
+        val dummyX2 = curveValue.x2
+        val dummyY0 = curveValue.y0
+        val dummyY1 = curveValue.y1
+        val dummyY2 = curveValue.y2
+        val dummyY3 = curveValue.y3
+        curveValue.x1 =
+            if (curveValue.x2 != null) curveProperties.deltaDivisible - dummyX2!! else curveValue.x1 //If mirrored -> [width - x2*]
+        curveValue.x2 =
+            if (curveValue.x1 != null) curveProperties.deltaDivisible - dummyX1!! else curveValue.x2 //If mirrored -> [width - x1*]
+        curveValue.y0 = if (curveValue.y3 != null) dummyY3 else curveValue.y0 //If mirrored -> y3*
+        curveValue.y1 = if (curveValue.y2 != null) dummyY2 else curveValue.y1 //If mirrored -> y2*
+        curveValue.y2 = if (curveValue.y1 != null) dummyY1 else curveValue.y2 //If mirrored -> y1*
+        curveValue.y3 = if (curveValue.y0 != null) dummyY0 else curveValue.y3//If mirrored -> y0*
+
     }
 
     private fun ifUpsideDown(height: Float, delta: Float) {
-        if (!upsideDownCalculated) {
-            val dummyY0 = y0
-            val dummyY1 = y1
-            val dummyY2 = y2
-            val dummyY3 = y3
-            y0 = height / delta - (dummyY0 ?: 0f)
-            y1 = height / delta - (dummyY1 ?: 0f)
-            y2 = height / delta - (dummyY2 ?: 0f)
-            y3 = height / delta - (dummyY3 ?: 0f)
-            if (x3 == null && curveProperties.halfWidth) {
-                val dummyY1a = y1a
-                val dummyY2a = y2a
-                val dummyY3a = y3a
-                y1a = height / delta - (dummyY1a ?: 0f)
-                y2a = height / delta - (dummyY2a ?: 0f)
-                y3a = height / delta - (dummyY3a ?: 0f)
+        if (!curveProperties.upsideDownCalculated) {
+            val dummyY0 = curveValue.y0
+            val dummyY1 = curveValue.y1
+            val dummyY2 = curveValue.y2
+            val dummyY3 = curveValue.y3
+            curveValue.y0 = height / delta - (dummyY0 ?: 0f)
+            curveValue.y1 = height / delta - (dummyY1 ?: 0f)
+            curveValue.y2 = height / delta - (dummyY2 ?: 0f)
+            curveValue.y3 = height / delta - (dummyY3 ?: 0f)
+            if (curveValue.x3 == null && curveProperties.halfWidth) {
+                val dummyY1a = curveValue.y1a
+                val dummyY2a = curveValue.y2a
+                val dummyY3a = curveValue.y3a
+                curveValue.y1a = height / delta - (dummyY1a ?: 0f)
+                curveValue.y2a = height / delta - (dummyY2a ?: 0f)
+                curveValue.y3a = height / delta - (dummyY3a ?: 0f)
             }
-            upsideDownCalculated = true
+            curveProperties.upsideDownCalculated = true
         }
     }
 
@@ -242,52 +238,56 @@ class DynamicCurve : ConstraintLayout {
     }
 
     private fun initializeXY(attribute: TypedArray?) {
-        x0 =
+        curveValue = CurveValues(
+            x0 =
             if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x0))
-                ?: 0f else 0f
-        x1 =
+                ?: 0f else 0f,
+            x1 =
             if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x1))
-                ?: 0f else 0f
-        x2 =
+                ?: 0f else 0f,
+            x2 =
             if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x2))
-                ?: 0f else 0f
-        x3 = if (attribute != null) checkStringValues(
-            attribute.getString(R.styleable.DynamicCurve_x3),
-            true
-        ) else null
+                ?: 0f else 0f,
+            x3 = if (attribute != null) checkStringValues(
+                attribute.getString(R.styleable.DynamicCurve_x3),
+                true
+            ) else null,
 
-        y0 =
+            y0 =
             if (attribute != null) checkFullHeight(attribute.getString(R.styleable.DynamicCurve_y0))
-                ?: 0f else 0f
-        y1 =
+                ?: 0f else 0f,
+            y1 =
             if (attribute != null) checkFullHeight(attribute.getString(R.styleable.DynamicCurve_y1))
-                ?: 0f else 0f
-        y2 =
+                ?: 0f else 0f,
+            y2 =
             if (attribute != null) checkFullHeight(attribute.getString(R.styleable.DynamicCurve_y2))
-                ?: 0f else 0f
-        y3 =
+                ?: 0f else 0f,
+            y3 =
             if (attribute != null) checkFullHeight(attribute.getString(R.styleable.DynamicCurve_y3))
                 ?: 0f else 0f
-
-        if (x3 == null) {
-            x1a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x1a))
-                    ?: 0f else 0f
-            x2a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x2a))
-                    ?: 0f else 0f
-            x3a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x3a))
-                    ?: 0f else 0f
-            y1a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_y1a))
-                    ?: 0f else 0f
-            y2a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_y2a))
-                    ?: 0f else 0f
-            y3a =
-                if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_y3a))
-                    ?: 0f else 0f
+        ).let {
+            if (it.x3 == null)
+                return@let it.copy(
+                    x1a =
+                    if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x1a))
+                        ?: 0f else 0f,
+                    x2a =
+                    if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x2a))
+                        ?: 0f else 0f,
+                    x3a =
+                    if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_x3a))
+                        ?: 0f else 0f,
+                    y1a =
+                    if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_y1a))
+                        ?: 0f else 0f,
+                    y2a =
+                    if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_y2a))
+                        ?: 0f else 0f,
+                    y3a =
+                    if (attribute != null) checkStringValues(attribute.getString(R.styleable.DynamicCurve_y3a))
+                        ?: 0f else 0f
+                )
+            return@let it
         }
     }
 
@@ -326,45 +326,31 @@ class DynamicCurve : ConstraintLayout {
     }
 
     fun changeValues(
-        x0: String,
-        y0: String,
-        x1: String,
-        y1: String,
-        x2: String,
-        y2: String,
-        x3: String,
-        y3: String
+        curveValues: CurveValues
     ) {
-        this.x0 = checkStringValues(x0)
-        this.x1 = checkStringValues(x1)
-        this.x2 = checkStringValues(x2)
-        this.x3 = checkStringValues(x3, true)
-
-        this.y0 = checkFullHeight(y0)
-        this.y1 = checkFullHeight(y1)
-        this.y2 = checkFullHeight(y2)
-        this.y3 = checkFullHeight(y3)
-
+        curveValue = curveValues
         init()
         invalidate()
     }
 
     fun changeValues(xyType: XYControls, value: String) {
-        when (xyType) {
-            XYControls.X0 -> this.x0 = checkStringValues(value)
-            XYControls.X1 -> this.x1 = checkStringValues(value)
-            XYControls.X2 -> this.x2 = checkStringValues(value)
-            XYControls.X3 -> this.x3 = checkStringValues(value, true)
-            XYControls.Y0 -> this.y0 = checkStringValues(value)
-            XYControls.Y1 -> this.y1 = checkStringValues(value)
-            XYControls.Y2 -> this.y2 = checkStringValues(value)
-            XYControls.Y3 -> this.y3 = checkStringValues(value)
-            XYControls.X1a -> this.x1a = checkStringValues(value)
-            XYControls.X2a -> this.x2a = checkStringValues(value)
-            XYControls.X3a -> this.x3a = checkStringValues(value)
-            XYControls.Y1a -> this.y1a = checkStringValues(value)
-            XYControls.Y2a -> this.y2a = checkStringValues(value)
-            XYControls.Y3a -> this.y3a = checkStringValues(value)
+        curveValue.apply {
+            when (xyType) {
+                XYControls.X0 -> this.x0 = checkStringValues(value)
+                XYControls.X1 -> this.x1 = checkStringValues(value)
+                XYControls.X2 -> this.x2 = checkStringValues(value)
+                XYControls.X3 -> this.x3 = checkStringValues(value, true)
+                XYControls.Y0 -> this.y0 = checkStringValues(value)
+                XYControls.Y1 -> this.y1 = checkStringValues(value)
+                XYControls.Y2 -> this.y2 = checkStringValues(value)
+                XYControls.Y3 -> this.y3 = checkStringValues(value)
+                XYControls.X1a -> this.x1a = checkStringValues(value)
+                XYControls.X2a -> this.x2a = checkStringValues(value)
+                XYControls.X3a -> this.x3a = checkStringValues(value)
+                XYControls.Y1a -> this.y1a = checkStringValues(value)
+                XYControls.Y2a -> this.y2a = checkStringValues(value)
+                XYControls.Y3a -> this.y3a = checkStringValues(value)
+            }
         }
         init()
         invalidate()
@@ -372,20 +358,20 @@ class DynamicCurve : ConstraintLayout {
 
     fun getValue(xyType: XYControls): Float {
         return when (xyType) {
-            XYControls.X0 -> this.x0
-            XYControls.X1 -> this.x1
-            XYControls.X2 -> this.x2
-            XYControls.X3 -> if (x3 != null) this.x3 else if (curveProperties.halfWidth) curveProperties.deltaDivisible / 2 else curveProperties.deltaDivisible
-            XYControls.Y0 -> this.y0
-            XYControls.Y1 -> this.y1
-            XYControls.Y2 -> this.y2
-            XYControls.Y3 -> this.y3
-            XYControls.X1a -> this.x1a
-            XYControls.X2a -> this.x2a
-            XYControls.X3a -> this.x3a
-            XYControls.Y1a -> this.y1a
-            XYControls.Y2a -> this.y2a
-            XYControls.Y3a -> this.y3a
+            XYControls.X0 -> curveValue.x0
+            XYControls.X1 -> curveValue.x1
+            XYControls.X2 -> curveValue.x2
+            XYControls.X3 -> if (curveValue.x3 != null) curveValue.x3 else if (curveProperties.halfWidth) curveProperties.deltaDivisible / 2 else curveProperties.deltaDivisible
+            XYControls.Y0 -> curveValue.y0
+            XYControls.Y1 -> curveValue.y1
+            XYControls.Y2 -> curveValue.y2
+            XYControls.Y3 -> curveValue.y3
+            XYControls.X1a -> curveValue.x1a
+            XYControls.X2a -> curveValue.x2a
+            XYControls.X3a -> curveValue.x3a
+            XYControls.Y1a -> curveValue.y1a
+            XYControls.Y2a -> curveValue.y2a
+            XYControls.Y3a -> curveValue.y3a
         } ?: 0.0f
     }
 
@@ -429,7 +415,7 @@ class DynamicCurve : ConstraintLayout {
 
     fun isInverted(value: Boolean) {
         curveProperties.upsideDown = value
-        upsideDownCalculated = false
+        curveProperties.upsideDownCalculated = false
         init()
         invalidate()
     }
