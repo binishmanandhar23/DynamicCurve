@@ -8,6 +8,7 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.binish.dynamiccurve.data.CurveProperties
 import com.binish.dynamiccurve.enums.XYControls
 
 class DynamicCurve : ConstraintLayout {
@@ -18,18 +19,7 @@ class DynamicCurve : ConstraintLayout {
     internal var cx1 = 0f
     internal var cx2 = 0f
 
-    var shadowEnabled = false
-    var shadowRadius = 2f
-    var shadowDx = 1f
-    var shadowDy = 1f
-    var shadowColor = R.color.shadow_color
-    var reverse: Boolean = false
-    var mirror: Boolean = false
-    var upsideDown: Boolean = false
-    var halfWidth: Boolean = false
-    var decreaseHeightBy: Float = 0.0f
-    private var isInPx: Boolean = false
-    private var deltaDivisible: Float = 10f
+    var curveProperties = CurveProperties()
 
     private var x0: Float? = 0.0f
     private var x1: Float? = 0.0f
@@ -67,24 +57,31 @@ class DynamicCurve : ConstraintLayout {
             ContextCompat.getColor(context, R.color.color_white)
         )
 
-        shadowEnabled = attribute.getBoolean(R.styleable.DynamicCurve_enableShadow, false)
-        shadowRadius = attribute.getFloat(R.styleable.DynamicCurve_shadowRadius, 2f)
-        shadowDx = attribute.getFloat(R.styleable.DynamicCurve_shadowDx, 1f)
-        shadowDy = attribute.getFloat(R.styleable.DynamicCurve_shadowDy, 1f)
-        shadowColor = attribute.getResourceId(R.styleable.DynamicCurve_shadowColor, R.color.shadow_color)
-
-        mirror = attribute.getBoolean(R.styleable.DynamicCurve_mirror, false)
-        reverse = attribute.getBoolean(R.styleable.DynamicCurve_reverse, false)
-        upsideDown = attribute.getBoolean(R.styleable.DynamicCurve_upsideDown, false)
-        upsideDownCalculated = !upsideDown
-        decreaseHeightBy = attribute.getFloat(R.styleable.DynamicCurve_decreaseHeightBy, 0f)
-        isInPx = attribute.getBoolean(R.styleable.DynamicCurve_isInPx, false)
-        paintColor = curveColor
-        deltaDivisible = attribute.getFloat(R.styleable.DynamicCurve_deltaDivisible, 10f)
+        curveProperties = CurveProperties(
+            shadowEnabled = attribute.getBoolean(R.styleable.DynamicCurve_enableShadow, false),
+            shadowRadius = attribute.getFloat(R.styleable.DynamicCurve_shadowRadius, 2f),
+            shadowDx = attribute.getFloat(R.styleable.DynamicCurve_shadowDx, 1f),
+            shadowDy = attribute.getFloat(R.styleable.DynamicCurve_shadowDy, 1f),
+            shadowColor = attribute.getResourceId(
+                R.styleable.DynamicCurve_shadowColor,
+                R.color.shadow_color
+            ),
+            mirror = attribute.getBoolean(R.styleable.DynamicCurve_mirror, false),
+            reverse = attribute.getBoolean(R.styleable.DynamicCurve_reverse, false),
+            upsideDown = attribute.getBoolean(R.styleable.DynamicCurve_upsideDown, false),
+            upsideDownCalculated = !attribute.getBoolean(
+                R.styleable.DynamicCurve_upsideDown,
+                false
+            ),
+            decreaseHeightBy = attribute.getFloat(R.styleable.DynamicCurve_decreaseHeightBy, 0f),
+            isInPx = attribute.getBoolean(R.styleable.DynamicCurve_isInPx, false),
+            paintColor = curveColor,
+            deltaDivisible = attribute.getFloat(R.styleable.DynamicCurve_deltaDivisible, 10f)
+        )
 
         initializeXY(attribute)
 
-        if (mirror) ifMirrored() //For mirrored
+        if (curveProperties.mirror) ifMirrored() //For mirrored
         init()
     }
 
@@ -109,8 +106,8 @@ class DynamicCurve : ConstraintLayout {
         //        paint.setStrokeWidth(4);
 
         //For Shadows
-        if(shadowEnabled) {
-            paint!!.setShadowLayer(shadowRadius, shadowDx, shadowDy, shadowColor)
+        if (curveProperties.shadowEnabled) {
+            paint!!.setShadowLayer(curveProperties.shadowRadius, curveProperties.shadowDx, curveProperties.shadowDy, ContextCompat.getColor(context, curveProperties.shadowColor))
             setLayerType(LAYER_TYPE_SOFTWARE, paint)
         }
 
@@ -120,7 +117,7 @@ class DynamicCurve : ConstraintLayout {
         paint2 = Paint(Paint.ANTI_ALIAS_FLAG)
         paint2!!.style = Paint.Style.STROKE
         paint2!!.strokeWidth = 3f
-        paint2!!.color = resources.getColor(R.color.color_purple)
+        paint2!!.color = ContextCompat.getColor(context, R.color.color_purple)
         /****************************************************/
 
         setBackgroundResource(R.color.color_transparent)
@@ -130,61 +127,60 @@ class DynamicCurve : ConstraintLayout {
         super.onDraw(canvas)
         val height = height
         val width = width
-        val delta = width / deltaDivisible
-        val deltaHeight = height / deltaDivisible
+        val delta = width / curveProperties.deltaDivisible
+        val deltaHeight = height / curveProperties.deltaDivisible
 
         ifUpsideDown(height.toFloat(), delta) //For upSideDown
 
         path?.moveTo(
-            if (isInPx) dp2px(x0!!) else x0!! * delta,
+            if (curveProperties.isInPx) dp2px(x0!!) else x0!! * delta,
             when {
-                y0 == null -> height.toFloat() - (decreaseHeightBy * deltaHeight)
-                isInPx -> dp2px(
-                    y0!! - decreaseHeightBy
+                y0 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
+                curveProperties.isInPx -> dp2px(
+                    y0!! - curveProperties.decreaseHeightBy
                 )
-                else -> (y0!! - decreaseHeightBy) * delta
+                else -> (y0!! - curveProperties.decreaseHeightBy) * delta
             }
         )
         path?.cubicTo(
-            if (isInPx) dp2px(x1!!) else x1!! * delta,
+            if (curveProperties.isInPx) dp2px(x1!!) else x1!! * delta,
             when {
-                y1 == null -> height.toFloat() - (decreaseHeightBy * deltaHeight)
-                isInPx -> dp2px(y1!! - decreaseHeightBy)
-                else -> (y1!! - decreaseHeightBy
-                        ) * delta
+                y1 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
+                curveProperties.isInPx -> dp2px(y1!! - curveProperties.decreaseHeightBy)
+                else -> (y1!! - curveProperties.decreaseHeightBy) * delta
             },
-            if (isInPx) dp2px(x2!!) else x2!! * delta,
+            if (curveProperties.isInPx) dp2px(x2!!) else x2!! * delta,
             when {
-                y2 == null -> height.toFloat() - (decreaseHeightBy * deltaHeight)
-                isInPx -> dp2px(
-                    y2!! - decreaseHeightBy
+                y2 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
+                curveProperties.isInPx -> dp2px(
+                    y2!! - curveProperties.decreaseHeightBy
                 )
-                else -> (y2!! - decreaseHeightBy) * delta
+                else -> (y2!! - curveProperties.decreaseHeightBy) * delta
             },
-            if (x3 == null && !halfWidth) width.toFloat() else if (x3 == null && halfWidth) width.toFloat() / 2 else if (isInPx) dp2px(
+            if (x3 == null && !curveProperties.halfWidth) width.toFloat() else if (x3 == null && curveProperties.halfWidth) width.toFloat() / 2 else if (curveProperties.isInPx) dp2px(
                 x3!!
             ) else x3!! * delta,
             when {
-                y3 == null -> height.toFloat() - (decreaseHeightBy * deltaHeight)
-                isInPx -> dp2px(
-                    y3!! - decreaseHeightBy
+                y3 == null -> height.toFloat() - (curveProperties.decreaseHeightBy * deltaHeight)
+                curveProperties.isInPx -> dp2px(
+                    y3!! - curveProperties.decreaseHeightBy
                 )
-                else -> (y3!! - decreaseHeightBy) * delta
+                else -> (y3!! - curveProperties.decreaseHeightBy) * delta
             }
         )
 
-        if (x3 == null && halfWidth) {
+        if (x3 == null && curveProperties.halfWidth) {
             path?.cubicTo(
-                if (isInPx) dp2px(x1a!!) else x1a!! * delta,
-                if (isInPx) dp2px(y1a!! - decreaseHeightBy) else (y1a!! - decreaseHeightBy) * delta,
-                if (isInPx) dp2px(x2a!!) else x2a!! * delta,
-                if (isInPx) dp2px(y2a!! - decreaseHeightBy) else (y2a!! - decreaseHeightBy) * delta,
+                if (curveProperties.isInPx) dp2px(x1a!!) else x1a!! * delta,
+                if (curveProperties.isInPx) dp2px(y1a!! - curveProperties.decreaseHeightBy) else (y1a!! - curveProperties.decreaseHeightBy) * delta,
+                if (curveProperties.isInPx) dp2px(x2a!!) else x2a!! * delta,
+                if (curveProperties.isInPx) dp2px(y2a!! - curveProperties.decreaseHeightBy) else (y2a!! - curveProperties.decreaseHeightBy) * delta,
                 width.toFloat(),
-                if (isInPx) dp2px(y3a!! - decreaseHeightBy) else (y3a!! - decreaseHeightBy) * delta
+                if (curveProperties.isInPx) dp2px(y3a!! - curveProperties.decreaseHeightBy) else (y3a!! - curveProperties.decreaseHeightBy) * delta
             )
         }
 
-        if (reverse) {
+        if (curveProperties.reverse) {
             path?.lineTo(width.toFloat(), 0f)
             path?.lineTo(0f, 0f)
         } else {
@@ -210,8 +206,8 @@ class DynamicCurve : ConstraintLayout {
         val dummyY1 = y1
         val dummyY2 = y2
         val dummyY3 = y3
-        x1 = if (x2 != null) deltaDivisible - dummyX2!! else x1 //If mirrored -> [width - x2*]
-        x2 = if (x1 != null) deltaDivisible - dummyX1!! else x2 //If mirrored -> [width - x1*]
+        x1 = if (x2 != null) curveProperties.deltaDivisible - dummyX2!! else x1 //If mirrored -> [width - x2*]
+        x2 = if (x1 != null) curveProperties.deltaDivisible - dummyX1!! else x2 //If mirrored -> [width - x1*]
         y0 = if (y3 != null) dummyY3 else y0 //If mirrored -> y3*
         y1 = if (y2 != null) dummyY2 else y1 //If mirrored -> y2*
         y2 = if (y1 != null) dummyY1 else y2 //If mirrored -> y1*
@@ -228,7 +224,7 @@ class DynamicCurve : ConstraintLayout {
             y1 = height / delta - (dummyY1 ?: 0f)
             y2 = height / delta - (dummyY2 ?: 0f)
             y3 = height / delta - (dummyY3 ?: 0f)
-            if(x3==null && halfWidth){
+            if (x3 == null && curveProperties.halfWidth) {
                 val dummyY1a = y1a
                 val dummyY2a = y2a
                 val dummyY3a = y3a
@@ -303,17 +299,17 @@ class DynamicCurve : ConstraintLayout {
         return if (isX3)
             when {
                 values.equals("width", ignoreCase = true) -> {
-                    halfWidth = false
+                    curveProperties.halfWidth = false
                     listener?.isHalfWidth(false)
                     null
                 }
                 values.equals("half", ignoreCase = true) -> {
-                    halfWidth = true
+                    curveProperties.halfWidth = true
                     listener?.isHalfWidth(true)
                     null
                 }
                 else -> {
-                    halfWidth = false
+                    curveProperties.halfWidth = false
                     values?.toFloat()
                 }
             } else values?.toFloat()
@@ -379,7 +375,7 @@ class DynamicCurve : ConstraintLayout {
             XYControls.X0 -> this.x0
             XYControls.X1 -> this.x1
             XYControls.X2 -> this.x2
-            XYControls.X3 -> if (x3 != null) this.x3 else if (halfWidth) deltaDivisible / 2 else deltaDivisible
+            XYControls.X3 -> if (x3 != null) this.x3 else if (curveProperties.halfWidth) curveProperties.deltaDivisible / 2 else curveProperties.deltaDivisible
             XYControls.Y0 -> this.y0
             XYControls.Y1 -> this.y1
             XYControls.Y2 -> this.y2
@@ -393,65 +389,65 @@ class DynamicCurve : ConstraintLayout {
         } ?: 0.0f
     }
 
-    fun isShadow(value: Boolean){
-        shadowEnabled = value
+    fun isShadow(value: Boolean) {
+        curveProperties.shadowEnabled = value
         init()
         invalidate()
     }
 
-    fun setCurveShadowRadius(value: Float){
-        shadowRadius = value
+    fun setCurveShadowRadius(value: Float) {
+        curveProperties.shadowRadius = value
         init()
         invalidate()
     }
 
-    fun setCurveShadowDx(value: Float){
-        shadowDx = value
+    fun setCurveShadowDx(value: Float) {
+        curveProperties.shadowDx = value
         init()
         invalidate()
     }
 
-    fun setCurveShadowDy(value: Float){
-        shadowDy = value
+    fun setCurveShadowDy(value: Float) {
+        curveProperties.shadowDy = value
         init()
         invalidate()
     }
 
     fun isMirrored(value: Boolean) {
-        mirror = value
+        curveProperties.mirror = value
         ifMirrored()
         init()
         invalidate()
     }
 
     fun isReversed(value: Boolean) {
-        reverse = value
-        listener?.isReversed(reverse)
+        curveProperties.reverse = value
+        listener?.isReversed(curveProperties.reverse)
         init()
         invalidate()
     }
 
     fun isInverted(value: Boolean) {
-        upsideDown = value
+        curveProperties.upsideDown = value
         upsideDownCalculated = false
         init()
         invalidate()
     }
 
     fun decreaseHeightBy(value: String) {
-        decreaseHeightBy = checkStringValues(value) ?: 0f
+        curveProperties.decreaseHeightBy = checkStringValues(value) ?: 0f
         init()
         invalidate()
     }
 
     fun isInPx(value: Boolean) {
-        isInPx = value
+        curveProperties.isInPx = value
         init()
         invalidate()
     }
 
     fun deltaDivisible(value: String) {
-        deltaDivisible = checkStringValues(value) ?: 10f
+        curveProperties.deltaDivisible = checkStringValues(value) ?: 10f
         init()
         invalidate()
     }

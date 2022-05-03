@@ -1,11 +1,10 @@
-package com.bonzun.ivf.ui.jetpackview
+package com.binish.dynamiccurve
 
 import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,46 +16,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.bonzun.ivf.R
+import com.binish.dynamiccurve.data.CurveProperties
+import com.binish.dynamiccurve.data.CurveValues
 
 object DynamicCurveCompose {
-    data class CurveValues(
-        var x0: Float? = 0.0f,
-        var x1: Float? = 0.0f,
-        var x2: Float? = 0.0f,
-        var x3: Float? = 0.0f,
-        var y0: Float? = 0.0f,
-        var y1: Float? = 0.0f,
-        var y2: Float? = 0.0f,
-        var y3: Float? = 0.0f,
-        var x1a: Float? = 0.0f,
-        var x2a: Float? = 0.0f,
-        var x3a: Float? = 0.0f,
-        var y1a: Float? = 0.0f,
-        var y2a: Float? = 0.0f,
-        var y3a: Float? = 0.0f,
-        var x3String: String? = null,
-    )
-
-    data class CurveProperties(
-        var shadowEnabled: Boolean = false,
-        var shadowRadius: Float = 2f,
-        var shadowDx: Float = 1f,
-        var shadowDy: Float = 1f,
-        var shadowColor: Int = R.color.shadow_color,
-        var reverse: Boolean = false,
-        var mirror: Boolean = false,
-        var upsideDown: Boolean = false,
-        var halfWidth: Boolean = false,
-        var decreaseHeightBy: Float = 0.0f,
-        var isInPx: Boolean = false,
-        var deltaDivisible: Float = 10f,
-        var upsideDownCalculated: Boolean = true,
-        var paintColor: Int = R.color.color_orange
-    )
 
     @Composable
-    fun Curve(modifier: Modifier, backgroundColor: Color = colorResource(id = R.color.color_transparent), curveProperties: CurveProperties = CurveProperties(), curveValues: CurveValues, content: (@Composable BoxScope.() -> Unit)? = null) {
+    fun Curve(modifier: Modifier, backgroundColor: Color = colorResource(id = android.R.color.transparent),
+              curveProperties: CurveProperties = CurveProperties(),
+              curveValues: CurveValues, content: (@Composable BoxScope.() -> Unit)? = null) {
         val context = LocalContext.current
         var newInstanceOfCurveValues = curveValues
         checkX3Value(curveValues.x3String){ x3, halfWidth ->
