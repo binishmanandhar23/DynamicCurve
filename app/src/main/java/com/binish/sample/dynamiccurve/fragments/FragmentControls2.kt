@@ -41,8 +41,8 @@ class FragmentControls2(val listener: DynamicCurve.DynamicCurveAdapter) : Fragme
             })
 
         binding.checkBoxEnableSecondCurve.visibility = View.VISIBLE
-        binding.checkBoxEnableSecondCurve.isChecked = getView<DynamicCurve>(R.id.dynamicCurve).halfWidth
-        control2Adapter.isEnabled(getView<DynamicCurve>(R.id.dynamicCurve).halfWidth)
+        binding.checkBoxEnableSecondCurve.isChecked = getView<DynamicCurve>(R.id.dynamicCurve).curveProperties.halfWidth
+        control2Adapter.isEnabled(getView<DynamicCurve>(R.id.dynamicCurve).curveProperties.halfWidth)
         getView<DynamicCurve>(R.id.dynamicCurve).setUpListener(listener)
         binding.recyclerViewControl1.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)

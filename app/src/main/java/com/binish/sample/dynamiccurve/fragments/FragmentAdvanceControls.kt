@@ -29,27 +29,27 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val curve = getView<DynamicCurve>(R.id.dynamicCurve)
-        binding.checkboxReverse.isChecked = curve.reverse
+        binding.checkboxReverse.isChecked = curve.curveProperties.reverse
         binding.checkboxReverse.setOnCheckedChangeListener { _, isChecked ->
             curve.isReversed(isChecked)
         }
-        binding.checkboxMirror.isChecked = curve.mirror
+        binding.checkboxMirror.isChecked = curve.curveProperties.mirror
         binding.checkboxMirror.setOnCheckedChangeListener { _, isChecked ->
             curve.isMirrored(isChecked)
         }
-        binding.checkboxMirror.isChecked = curve.upsideDown
+        binding.checkboxMirror.isChecked = curve.curveProperties.upsideDown
         binding.checkboxUpsideDown.setOnCheckedChangeListener { _, isChecked ->
             curve.isInverted(isChecked)
         }
 
-        binding.checkboxEnableShadow.isChecked = curve.shadowEnabled
+        binding.checkboxEnableShadow.isChecked = curve.curveProperties.shadowEnabled
         binding.checkboxEnableShadow.setOnCheckedChangeListener { _, isChecked ->
             curve.isShadow(isChecked)
             binding.seekBarShadowRadius.visibility = if(isChecked) View.VISIBLE else View.GONE
         }
 
-        binding.seekBarShadowRadius.visibility = if(curve.shadowEnabled) View.VISIBLE else View.GONE
-        binding.seekBarDecreaseHeightBy.progress = Utils.getValueInIntForShadows(curve.shadowRadius)
+        binding.seekBarShadowRadius.visibility = if(curve.curveProperties.shadowEnabled) View.VISIBLE else View.GONE
+        binding.seekBarDecreaseHeightBy.progress = Utils.getValueInIntForShadows(curve.curveProperties.shadowRadius)
         binding.seekBarShadowRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if(fromUser)
@@ -82,7 +82,7 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
             listener.onColorPicked(it)
         }
 
-        binding.seekBarDecreaseHeightBy.progress = Utils.getValueInInt(-curve.decreaseHeightBy)
+        binding.seekBarDecreaseHeightBy.progress = Utils.getValueInInt(-curve.curveProperties.decreaseHeightBy)
         binding.seekBarDecreaseHeightBy.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
