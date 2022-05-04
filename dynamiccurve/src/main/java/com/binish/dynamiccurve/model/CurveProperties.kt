@@ -1,4 +1,4 @@
-package com.binish.dynamiccurve.data
+package com.binish.dynamiccurve.model
 
 import com.binish.dynamiccurve.R
 

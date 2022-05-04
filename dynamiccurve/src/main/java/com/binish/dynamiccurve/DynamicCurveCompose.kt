@@ -16,8 +16,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.binish.dynamiccurve.data.CurveProperties
-import com.binish.dynamiccurve.data.CurveValues
+import com.binish.dynamiccurve.model.CurveProperties
+import com.binish.dynamiccurve.model.CurveValues
 
 object DynamicCurveCompose {
 

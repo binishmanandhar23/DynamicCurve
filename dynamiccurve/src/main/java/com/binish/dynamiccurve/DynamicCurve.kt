@@ -8,8 +8,9 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.binish.dynamiccurve.data.CurveProperties
-import com.binish.dynamiccurve.data.CurveValues
+import com.binish.dynamiccurve.data.CoreLogic
+import com.binish.dynamiccurve.model.CurveProperties
+import com.binish.dynamiccurve.model.CurveValues
 import com.binish.dynamiccurve.enums.XYControls
 
 class DynamicCurve : ConstraintLayout {
@@ -22,6 +23,8 @@ class DynamicCurve : ConstraintLayout {
 
     var curveProperties = CurveProperties()
     var curveValue = CurveValues()
+
+    lateinit var coreLogic: CoreLogic
 
 
     private var listener: DynamicCurveAdapter? = null
@@ -67,7 +70,7 @@ class DynamicCurve : ConstraintLayout {
 
         initializeXY(attribute)
 
-        if (curveProperties.mirror) ifMirrored() //For mirrored
+//        if (curveProperties.mirror) ifMirrored() //For mirrored
         init()
     }
 
@@ -102,13 +105,14 @@ class DynamicCurve : ConstraintLayout {
             setLayerType(LAYER_TYPE_SOFTWARE, paint)
         }
 
-
-        path = Path()
+        coreLogic.setupCurveValuesAndProperties(curveValues = curveValue, curveProperties = curveProperties)
+        coreLogic.initializePath(paint = paint)
+        /*path = Path()
 
         paint2 = Paint(Paint.ANTI_ALIAS_FLAG)
         paint2!!.style = Paint.Style.STROKE
         paint2!!.strokeWidth = 3f
-        paint2!!.color = ContextCompat.getColor(context, R.color.color_purple)
+        paint2!!.color = ContextCompat.getColor(context, R.color.color_purple)*/
         /****************************************************/
 
         setBackgroundResource(R.color.color_transparent)
@@ -116,13 +120,11 @@ class DynamicCurve : ConstraintLayout {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        val height = height
+        /*val height = height
         val width = width
         val delta = width / curveProperties.deltaDivisible
         val deltaHeight = height / curveProperties.deltaDivisible
-
         ifUpsideDown(height.toFloat(), delta) //For upSideDown
-
         curveValue.run {
             path?.moveTo(
                 if (curveProperties.isInPx) dp2px(x0!!) else x0!! * delta,
@@ -184,52 +186,10 @@ class DynamicCurve : ConstraintLayout {
             path?.close()
 
             canvas?.drawPath(path!!, paint!!)
-        }
-    }
+        }*/
 
-    private fun dp2px(dp: Float): Float {
-        return (mContext?.resources?.displayMetrics!!.density * dp + 0.5f)
-    }
+        coreLogic.drawLogic(canvas = canvas, height = height, width = width)
 
-    private fun ifMirrored() {
-        //NOTE: '*' means un-mirrored value
-        val dummyX1 = curveValue.x1
-        val dummyX2 = curveValue.x2
-        val dummyY0 = curveValue.y0
-        val dummyY1 = curveValue.y1
-        val dummyY2 = curveValue.y2
-        val dummyY3 = curveValue.y3
-        curveValue.x1 =
-            if (curveValue.x2 != null) curveProperties.deltaDivisible - dummyX2!! else curveValue.x1 //If mirrored -> [width - x2*]
-        curveValue.x2 =
-            if (curveValue.x1 != null) curveProperties.deltaDivisible - dummyX1!! else curveValue.x2 //If mirrored -> [width - x1*]
-        curveValue.y0 = if (curveValue.y3 != null) dummyY3 else curveValue.y0 //If mirrored -> y3*
-        curveValue.y1 = if (curveValue.y2 != null) dummyY2 else curveValue.y1 //If mirrored -> y2*
-        curveValue.y2 = if (curveValue.y1 != null) dummyY1 else curveValue.y2 //If mirrored -> y1*
-        curveValue.y3 = if (curveValue.y0 != null) dummyY0 else curveValue.y3//If mirrored -> y0*
-
-    }
-
-    private fun ifUpsideDown(height: Float, delta: Float) {
-        if (!curveProperties.upsideDownCalculated) {
-            val dummyY0 = curveValue.y0
-            val dummyY1 = curveValue.y1
-            val dummyY2 = curveValue.y2
-            val dummyY3 = curveValue.y3
-            curveValue.y0 = height / delta - (dummyY0 ?: 0f)
-            curveValue.y1 = height / delta - (dummyY1 ?: 0f)
-            curveValue.y2 = height / delta - (dummyY2 ?: 0f)
-            curveValue.y3 = height / delta - (dummyY3 ?: 0f)
-            if (curveValue.x3 == null && curveProperties.halfWidth) {
-                val dummyY1a = curveValue.y1a
-                val dummyY2a = curveValue.y2a
-                val dummyY3a = curveValue.y3a
-                curveValue.y1a = height / delta - (dummyY1a ?: 0f)
-                curveValue.y2a = height / delta - (dummyY2a ?: 0f)
-                curveValue.y3a = height / delta - (dummyY3a ?: 0f)
-            }
-            curveProperties.upsideDownCalculated = true
-        }
     }
 
     private fun checkFullHeight(value: String?): Float? {
@@ -289,6 +249,7 @@ class DynamicCurve : ConstraintLayout {
                 )
             return@let it
         }
+        coreLogic = CoreLogic.initialize(curveValue, curveProperties)
     }
 
     private fun checkStringValues(values: String?): Float? {
@@ -401,7 +362,7 @@ class DynamicCurve : ConstraintLayout {
 
     fun isMirrored(value: Boolean) {
         curveProperties.mirror = value
-        ifMirrored()
+        coreLogic.ifMirrored()
         init()
         invalidate()
     }

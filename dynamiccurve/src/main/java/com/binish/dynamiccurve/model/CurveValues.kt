@@ -1,4 +1,4 @@
-package com.binish.dynamiccurve.data
+package com.binish.dynamiccurve.model
 
 data class CurveValues(
     var x0: Float? = 0.0f,
