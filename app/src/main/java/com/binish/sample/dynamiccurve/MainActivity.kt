@@ -2,21 +2,26 @@ package com.binish.sample.dynamiccurve
 
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.binish.dynamiccurve.DynamicCurveCompose
 import com.binish.sample.dynamiccurve.databinding.ActivityMainBinding
 import com.binish.sample.dynamiccurve.enums.TabsEnum
 import com.binish.sample.dynamiccurve.fragments.BottomSheetController
 import com.binish.sample.dynamiccurve.tabs.ComposeTab
 import com.binish.sample.dynamiccurve.tabs.XMLTab
 import com.binish.sample.dynamiccurve.utils.Utils
+import com.binish.sample.dynamiccurve.viewmodel.DynamicCurveViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+
+    val dynamicCurveViewModel by viewModels<DynamicCurveViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

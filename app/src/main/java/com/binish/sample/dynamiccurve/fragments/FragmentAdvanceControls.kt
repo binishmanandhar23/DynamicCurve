@@ -7,16 +7,20 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.binish.dynamiccurve.DynamicCurve
 import com.binish.sample.dynamiccurve.R
 import com.binish.sample.dynamiccurve.adapters.AdvanceControlColorAdapter
 import com.binish.sample.dynamiccurve.databinding.FragmentAdvanceControlsBinding
 import com.binish.sample.dynamiccurve.utils.Utils
+import com.binish.sample.dynamiccurve.viewmodel.DynamicCurveViewModel
 
 class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) : Fragment() {
     private var _binding: FragmentAdvanceControlsBinding? = null
     private val binding get() = _binding!!
+
+    val dynamicCurveViewModel by activityViewModels<DynamicCurveViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,19 +36,23 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
         binding.checkboxReverse.isChecked = curve.curveProperties.reverse
         binding.checkboxReverse.setOnCheckedChangeListener { _, isChecked ->
             curve.isReversed(isChecked)
+            dynamicCurveViewModel.setReversed(isChecked)
         }
         binding.checkboxMirror.isChecked = curve.curveProperties.mirror
         binding.checkboxMirror.setOnCheckedChangeListener { _, isChecked ->
             curve.isMirrored(isChecked)
+            dynamicCurveViewModel.setMirrored(isChecked)
         }
         binding.checkboxMirror.isChecked = curve.curveProperties.upsideDown
         binding.checkboxUpsideDown.setOnCheckedChangeListener { _, isChecked ->
             curve.isInverted(isChecked)
+            dynamicCurveViewModel.setInverted(isChecked)
         }
 
         binding.checkboxEnableShadow.isChecked = curve.curveProperties.shadowEnabled
         binding.checkboxEnableShadow.setOnCheckedChangeListener { _, isChecked ->
             curve.isShadow(isChecked)
+            dynamicCurveViewModel.setShadow(isChecked)
             binding.seekBarShadowRadius.visibility = if(isChecked) View.VISIBLE else View.GONE
         }
 
@@ -53,7 +61,9 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
         binding.seekBarShadowRadius.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if(fromUser)
-                    curve.setCurveShadowRadius(Utils.getConvertedValueForShadows(progress))
+                    curve.setCurveShadowRadius(Utils.getConvertedValueForShadows(progress)).also {
+                        dynamicCurveViewModel.setShadowRadius(Utils.getConvertedValueForShadows(progress))
+                    }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -87,7 +97,10 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser)
-                    curve.decreaseHeightBy("-${Utils.getConvertedValue(progress)}")
+                    Utils.getConvertedValue(progress).let {
+                        curve.decreaseHeightBy("-${it}")
+                        dynamicCurveViewModel.decreaseHeightBy(-it)
+                    }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {

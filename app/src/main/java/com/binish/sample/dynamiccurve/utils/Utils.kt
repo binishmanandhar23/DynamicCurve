@@ -162,11 +162,7 @@ object Utils {
         return typefaceList
     }
 
-    fun getConvertedValue(intVal: Int): Float {
-        var floatVal = 0.0f
-        floatVal = .1f * intVal
-        return floatVal
-    }
+    fun getConvertedValue(intVal: Int): Float = .1f * intVal
 
     fun getConvertedValueForShadows(intVal: Int): Float {
         var floatVal = 0.0f

@@ -11,12 +11,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.binish.dynamiccurve.DynamicCurve
 import com.binish.sample.dynamiccurve.R
 import com.binish.sample.dynamiccurve.adapters.ControlAdapter
 import com.binish.sample.dynamiccurve.databinding.LayoutBottomSheetStickerDialogBinding
 import com.binish.sample.dynamiccurve.utils.Utils
+import com.binish.sample.dynamiccurve.viewmodel.DynamicCurveViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -26,6 +28,8 @@ class BottomSheetController(val listener: BottomMapDetailFragmentInteraction) :
     BottomSheetDialogFragment() {
     private var _binding: LayoutBottomSheetStickerDialogBinding?= null
     private val binding get() = _binding!!
+
+    val dynamicCurveViewModel by activityViewModels<DynamicCurveViewModel>()
 
     private var root: View? = null
     private var paintColor: Int? = null
@@ -157,10 +161,11 @@ class BottomSheetController(val listener: BottomMapDetailFragmentInteraction) :
                     override fun isHalfWidth(halfWidth: Boolean) {
                         control1Fragment?.binding?.checkBoxEnableSecondCurve?.isChecked = halfWidth
                         (control1Fragment?.binding?.recyclerViewControl1?.adapter as ControlAdapter).isHalfWidth(halfWidth)
+                        dynamicCurveViewModel.setHalfWidth(halfWidth = halfWidth)
                     }
 
                     override fun isReversed(reversed: Boolean) {
-                        Utils.changeStatusBarColor(requireActivity(),!reversed, R.color.color_white)
+                        //Utils.changeStatusBarColor(requireActivity(),!reversed, R.color.color_white)
                     }
                 }
                 mainListener!!
@@ -171,6 +176,7 @@ class BottomSheetController(val listener: BottomMapDetailFragmentInteraction) :
         private fun initializeColorListener(): FragmentAdvanceControls.AdvanceControlInteraction{
             return FragmentAdvanceControls.AdvanceControlInteraction {
                 paintColor = ContextCompat.getColor(requireContext(), it)
+                dynamicCurveViewModel.setPaintColor(it)
                 onStart()
             }
         }
