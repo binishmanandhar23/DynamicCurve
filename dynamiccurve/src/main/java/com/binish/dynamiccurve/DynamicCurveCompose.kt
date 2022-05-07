@@ -23,10 +23,11 @@ object DynamicCurveCompose {
 
     @Composable
     fun Curve(modifier: Modifier, backgroundColor: Color = colorResource(id = android.R.color.transparent),
-              curveProperties: CurveProperties = CurveProperties(),
+              curvePropertiesMain: CurveProperties = CurveProperties(),
               curveValues: CurveValues, content: (@Composable BoxScope.() -> Unit)? = null) {
         val context = LocalContext.current
         var newInstanceOfCurveValues = curveValues
+        var curveProperties = curvePropertiesMain
         checkX3Value(curveValues.x3String){ x3, halfWidth ->
             newInstanceOfCurveValues.x3 = x3
             curveProperties.halfWidth = halfWidth
@@ -58,12 +59,16 @@ object DynamicCurveCompose {
                     val delta = width / curveProperties.deltaDivisible
                     val deltaHeight = height / curveProperties.deltaDivisible
 
+                    if(curveProperties.upsideDown)
                     ifUpsideDown(
                         curveValues,
                         curveProperties,
                         height,
                         delta
-                    ) { newInstanceOfCurveValues = it } //For upSideDown
+                    ) { curveValues, curvePropertiesNew ->
+                        newInstanceOfCurveValues = curveValues
+                        curveProperties = curvePropertiesNew
+                    } //For upSideDown
 
                     path.moveTo(
                         if (curveProperties.isInPx) x0!!.dp2px(context) else x0!! * delta,
@@ -178,9 +183,9 @@ object DynamicCurveCompose {
         curveProperties: CurveProperties,
         height: Float,
         delta: Float,
-        newValues: (curveValue: CurveValues) -> Unit
+        newValues: (curveValue: CurveValues, curveProperties: CurveProperties) -> Unit
     ) {
-        curveValues.run {
+        curveValues.apply {
             if (!curveProperties.upsideDownCalculated) {
                 val dummyY0 = y0
                 val dummyY1 = y1
@@ -201,7 +206,7 @@ object DynamicCurveCompose {
                 curveProperties.upsideDownCalculated = true
             }
         }
-        newValues(curveValues)
+        newValues(curveValues, curveProperties)
     }
 
     private fun checkX3Value(values: String?, work: (value: Float?, halfWidth: Boolean) -> Unit) {
