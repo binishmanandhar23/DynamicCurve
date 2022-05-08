@@ -10,14 +10,14 @@ Add the following dependencies in the gradle file of your app module to get star
 
 Gradle
 ```kotlin
-implementation 'io.github.binishmanandhar23.dynamiccurve:dynamiccurve:1.1.0'
+implementation 'io.github.binishmanandhar23.dynamiccurve:dynamiccurve:2.0.0'
 ```
 Maven
 ```xml
 <dependency>
   <groupId>io.github.binishmanandhar23.dynamiccurve</groupId>
   <artifactId>dynamiccurve</artifactId>
-  <version>1.1.0</version>
+  <version>2.0.0</version>
   <type>pom</type>
 </dependency>
 ```
@@ -30,6 +30,18 @@ If there are any confusions just clone github repository for proper use cases & 
 
 # Setting up the view
 
+## Compose
+Initialization
+
+```kotlin
+DynamicCurveCompose.Curve(
+    modifier = Modifier.fillMaxSize(),
+    curveValues = CurveValues(x0 = 0f, x1 = 1f, x2 = 2f, x3InString = "width", y0 = 3f, y1 = 4f, y2 = 5f, y3 = 6f),
+    curvePropertiesMain = CurveProperties(paintColor = R.color.color_orange)
+)
+```
+
+##XML
 There are multiple ways to set up the curve. One way is to directly add values in xml
 
 ```xml
