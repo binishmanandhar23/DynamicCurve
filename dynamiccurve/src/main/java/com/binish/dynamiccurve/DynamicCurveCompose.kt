@@ -22,13 +22,17 @@ import com.binish.dynamiccurve.model.CurveValues
 object DynamicCurveCompose {
 
     @Composable
-    fun Curve(modifier: Modifier, backgroundColor: Color = colorResource(id = android.R.color.transparent),
-              curvePropertiesMain: CurveProperties = CurveProperties(),
-              curveValues: CurveValues, content: (@Composable BoxScope.() -> Unit)? = null) {
+    fun Curve(
+        modifier: Modifier,
+        backgroundColor: Color = colorResource(id = android.R.color.transparent),
+        curvePropertiesMain: CurveProperties = CurveProperties(),
+        curveValues: CurveValues,
+        content: (@Composable BoxScope.() -> Unit)? = null
+    ) {
         val context = LocalContext.current
         var newInstanceOfCurveValues = curveValues
         var curveProperties = curvePropertiesMain
-        checkX3Value(curveValues.x3String){ x3, halfWidth ->
+        checkX3Value(curveValues.x3String) { x3, halfWidth ->
             newInstanceOfCurveValues.x3 = x3
             curveProperties.halfWidth = halfWidth
         }
@@ -45,30 +49,32 @@ object DynamicCurveCompose {
         newInstanceOfCurveValues.run {
             ConstraintLayout {
                 val (canvas, innerContent) = createRefs()
-                Canvas(modifier = Modifier.background(color = backgroundColor).constrainAs(canvas){
-                    top.linkTo(innerContent.top)
-                    bottom.linkTo(innerContent.bottom)
-                    start.linkTo(innerContent.start)
-                    end.linkTo(innerContent.end)
-                    height = Dimension.fillToConstraints
-                    width = Dimension.fillToConstraints
+                Canvas(modifier = Modifier
+                    .background(color = backgroundColor)
+                    .constrainAs(canvas) {
+                        top.linkTo(innerContent.top)
+                        bottom.linkTo(innerContent.bottom)
+                        start.linkTo(innerContent.start)
+                        end.linkTo(innerContent.end)
+                        height = Dimension.fillToConstraints
+                        width = Dimension.fillToConstraints
 
-                }) {
+                    }) {
                     val height = size.height
                     val width = size.width
                     val delta = width / curveProperties.deltaDivisible
                     val deltaHeight = height / curveProperties.deltaDivisible
 
-                    if(curveProperties.upsideDown)
-                    ifUpsideDown(
-                        curveValues,
-                        curveProperties,
-                        height,
-                        delta
-                    ) { curveValues, curvePropertiesNew ->
-                        newInstanceOfCurveValues = curveValues
-                        curveProperties = curvePropertiesNew
-                    } //For upSideDown
+                    if (curveProperties.upsideDown)
+                        ifUpsideDown(
+                            curveValues,
+                            curveProperties,
+                            height,
+                            delta
+                        ) { curveValues, curvePropertiesNew ->
+                            newInstanceOfCurveValues = curveValues
+                            curveProperties = curvePropertiesNew
+                        } //For upSideDown
 
                     path.moveTo(
                         if (curveProperties.isInPx) x0!!.dp2px(context) else x0!! * delta,
@@ -142,7 +148,7 @@ object DynamicCurveCompose {
 
                     drawPath(path = path, color = paint.color, style = Fill)
                 }
-                Box(modifier = modifier.constrainAs(innerContent){
+                Box(modifier = modifier.constrainAs(innerContent) {
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
@@ -212,16 +218,16 @@ object DynamicCurveCompose {
     private fun checkX3Value(values: String?, work: (value: Float?, halfWidth: Boolean) -> Unit) {
         var halfWidth = false
         val returnValue = when {
-                values.equals("width", ignoreCase = true) -> {
-                    halfWidth = false
-                    null
-                }
-                values.equals("half", ignoreCase = true) -> {
-                    halfWidth = true
-                    null
-                }
-                else -> values?.toFloat()
+            values.equals("width", ignoreCase = true) -> {
+                halfWidth = false
+                null
             }
+            values.equals("half", ignoreCase = true) -> {
+                halfWidth = true
+                null
+            }
+            else -> values?.toFloat()
+        }
         work(returnValue, halfWidth)
     }
 

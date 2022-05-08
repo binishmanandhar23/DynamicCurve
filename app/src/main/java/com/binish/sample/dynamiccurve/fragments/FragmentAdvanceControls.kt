@@ -43,7 +43,7 @@ class FragmentAdvanceControls(private val listener: AdvanceControlInteraction) :
             curve.isMirrored(isChecked)
             dynamicCurveViewModel.setMirrored(isChecked)
         }
-        binding.checkboxMirror.isChecked = curve.curveProperties.upsideDown
+        binding.checkboxUpsideDown.isChecked = curve.curveProperties.upsideDown
         binding.checkboxUpsideDown.setOnCheckedChangeListener { _, isChecked ->
             curve.isInverted(isChecked)
             dynamicCurveViewModel.setInverted(isChecked)

@@ -1,16 +1,24 @@
 package com.binish.sample.dynamiccurve.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.binish.dynamiccurve.enums.XYControls
 import com.binish.dynamiccurve.model.CurveProperties
 import com.binish.dynamiccurve.model.CurveValues
 import com.binish.sample.dynamiccurve.R
 import com.binish.sample.dynamiccurve.enums.AnimationState
+import com.binish.sample.dynamiccurve.model.AnimateYControlValue
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class DynamicCurveViewModel : ViewModel() {
+    private var _duration = MutableStateFlow(3000)
+    val duration = _duration.asStateFlow()
+
     private var _curveProperties =
         MutableStateFlow(CurveProperties(paintColor = R.color.color_orange))
     val curveProperties = _curveProperties.asStateFlow()
@@ -21,26 +29,53 @@ class DynamicCurveViewModel : ViewModel() {
             x1 = 2.8f,
             x2 = 6.5f,
             x3String = "width",
-            y0 = 3.6f,
-            y1 = 3.3f,
-            y2 = 0.1f,
+            y0 = 5.6f,
+            y1 = 8.6f,
+            y2 = 3.0f,
             y3 = 5.6f,
         )
     )
     val curveValues = _curveValuesForCompose.asStateFlow()
+    val animationList = MutableLiveData(ArrayList<XYControls>())
 
-    private var _animationList = MutableStateFlow(ArrayList<XYControls>())
-    val animationList = _animationList.asStateFlow()
+    private var _animateYControlValue = MutableStateFlow(AnimateYControlValue())
+    val animateYControlValue = _animateYControlValue.asStateFlow()
+
+    fun changeAnimateYControlValue(xyControls: XYControls, value: Float) {
+        _animateYControlValue.update {
+            when (xyControls) {
+                XYControls.Y0 -> it.copy(y0 = value)
+                XYControls.Y1 -> it.copy(y1 = value)
+                XYControls.Y2 -> it.copy(y2 = value)
+                XYControls.Y3 -> it.copy(y3 = value)
+                else -> it
+            }
+        }
+    }
+
+    fun getAnimateYControlValue(xyControls: XYControls): Float
+        = when (xyControls) {
+            XYControls.Y0 -> animateYControlValue.value.y0
+            XYControls.Y1 -> animateYControlValue.value.y1
+            XYControls.Y2 -> animateYControlValue.value.y2
+            XYControls.Y3 -> animateYControlValue.value.y3
+            else -> 1f
+        }
+
+    fun changeDuration(duration: Int) {
+        _duration.update {
+            duration
+        }
+    }
 
     fun changeAnimationList(xyControls: XYControls, animationState: AnimationState) {
-        _animationList.update {
+        animationList.value = ArrayList<XYControls>(animationList.value ?: ArrayList()).apply {
             if (animationState == AnimationState.PLAY)
-                if (!it.contains(xyControls))
-                    it.add(xyControls)
-            if(animationState == AnimationState.PAUSE)
-                if(it.contains(xyControls))
-                    it.remove(xyControls)
-            ArrayList(it)
+                if (!contains(xyControls))
+                    add(xyControls)
+            if (animationState == AnimationState.PAUSE)
+                if (contains(xyControls))
+                    remove(xyControls)
         }
     }
 
@@ -86,58 +121,49 @@ class DynamicCurveViewModel : ViewModel() {
 
     internal fun setHalfWidth(halfWidth: Boolean) {
         _curveProperties.update {
-            it.halfWidth = halfWidth
-            it
+            it.copy(halfWidth = halfWidth)
         }
     }
 
     internal fun setPaintColor(colorResId: Int) {
         _curveProperties.update {
-            it.paintColor = colorResId
-            it
+            it.copy(paintColor = colorResId)
         }
     }
 
     internal fun setReversed(reversed: Boolean) {
         _curveProperties.update {
-            it.reverse = reversed
-            it
+            it.copy(reverse = reversed)
         }
     }
 
     internal fun setInverted(inverted: Boolean) {
         _curveProperties.update {
-            it.upsideDown = inverted
-            it.upsideDownCalculated = false
-            it
+            it.copy(upsideDown = inverted, upsideDownCalculated = false)
         }
     }
 
     internal fun setMirrored(mirrored: Boolean) {
         _curveProperties.update {
-            it.mirror = mirrored
-            it
+            it.copy(mirror = mirrored)
         }
     }
 
     internal fun setShadow(shadowEnabled: Boolean) {
         _curveProperties.update {
-            it.shadowEnabled = shadowEnabled
-            it
+            it.copy(shadowEnabled = shadowEnabled)
         }
     }
 
     internal fun setShadowRadius(shadowRadius: Float) {
         _curveProperties.update {
-            it.shadowRadius = shadowRadius
-            it
+            it.copy(shadowRadius = shadowRadius)
         }
     }
 
     internal fun decreaseHeightBy(decreaseHeightBy: Float) {
         _curveProperties.update {
-            it.decreaseHeightBy = decreaseHeightBy
-            it
+            it.copy(decreaseHeightBy = decreaseHeightBy)
         }
     }
 }
