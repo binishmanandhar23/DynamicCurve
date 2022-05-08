@@ -2,31 +2,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
-//apply from: 'publish.gradle'
-
-ext {
-    bintrayRepo = 'DynamicCurve' // Repo name in bintray dashboard
-    bintrayName = 'com.binish.dynamiccurve' // package name of the bintray repo
-
-    publishedGroupId = 'com.binish.dynamiccurve'   // this is the ID we want to see in implementation line
-    libraryName = 'dynamiccurve'     // this is the module name of library
-    artifact = 'dynamiccurve'        // this is the artifact we want to see in implementation line
-
-    libraryDescription = 'Helps you add Stickers, Texts, Images and Emoji over images and customize them' // description of library
-
-    siteUrl = 'https://github.com/binishmanandhar23/DynamicCurve'    // git repo url
-    gitUrl = 'https://github.com/binishmanandhar23/DynamicCurve.git' // git repo vcs url
-
-    libraryVersion = '1.1.0'      // library version
-
-    developerId = 'binishmanandhar23'                // This is your bintray username
-    developerName = 'Binish Manandhar'              // Developer's name
-    developerEmail = 'binish.manandhar23@gmail.com'                // Developer's email
-
-    licenseName = 'The Apache Software License, Version 2.0'  // for example, The Apache Software License, Version 2.0
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'   // for example, http://www.apache.org/licenses/LICENSE-2.0.txt
-    allLicenses = ["Apache-2.0"]    // array of licenses, for example, ["Apache-2.0"]
-}
+apply plugin: 'com.vanniktech.maven.publish' // NEW
 
 android {
     compileSdkVersion 32
