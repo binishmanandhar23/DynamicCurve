@@ -41,7 +41,7 @@ DynamicCurveCompose.Curve(
 )
 ```
 
-##XML
+## XML
 There are multiple ways to set up the curve. One way is to directly add values in xml
 
 ```xml
