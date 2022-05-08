@@ -10,12 +10,12 @@ Add the following dependencies in the gradle file of your app module to get star
 
 Gradle
 ```kotlin
-implementation 'com.binish.dynamiccurve:dynamiccurve:1.1.0'
+implementation 'io.github.binishmanandhar23.dynamiccurve:dynamiccurve:1.1.0'
 ```
 Maven
 ```xml
 <dependency>
-  <groupId>com.binish.dynamiccurve</groupId>
+  <groupId>io.github.binishmanandhar23.dynamiccurve</groupId>
   <artifactId>dynamiccurve</artifactId>
   <version>1.1.0</version>
   <type>pom</type>
