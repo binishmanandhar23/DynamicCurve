@@ -62,11 +62,8 @@ class FragmentControls1(private val listener: DynamicCurve.DynamicCurveAdapter) 
     }
 
     companion object {
-        fun newInstance(listener: DynamicCurve.DynamicCurveAdapter): FragmentControls1 = FragmentControls1(listener).apply {
-            arguments = Bundle().apply {
-
-            }
-        }
+        fun newInstance(listener: DynamicCurve.DynamicCurveAdapter): FragmentControls1 =
+            FragmentControls1(listener)
     }
 
     private fun <T> getView(viewId: Int): T = requireActivity().findViewById(viewId) as T

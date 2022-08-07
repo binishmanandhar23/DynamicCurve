@@ -1,11 +1,12 @@
 package com.binish.dynamiccurve
 
 import android.content.Context
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
@@ -16,22 +17,123 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.binish.dynamiccurve.model.AnimateDefaults
 import com.binish.dynamiccurve.model.CurveProperties
 import com.binish.dynamiccurve.model.CurveValues
 
 object DynamicCurveCompose {
+    @Composable
+    private inline fun AnimationWork(
+        curveValues: CurveValues,
+        animateDefaults: AnimateDefaults,
+        afterAnimation: (newCurveValues: CurveValues) -> Unit
+    ) {
+        val newCurveValues = CurveValues(
+            x0 = curveValues.x0,
+            x1 = curveValues.x1,
+            x2 = curveValues.x2,
+            x3 = curveValues.x3,
+            y0 = curveValues.y0,
+            y1 = curveValues.y1,
+            y2 = curveValues.y2,
+            y3 = curveValues.y3,
+            x1a = curveValues.x1a,
+            x2a = curveValues.x2a,
+            x3a = curveValues.x3a,
+            y1a = curveValues.y1a,
+            y2a = curveValues.y2a,
+            y3a = curveValues.y3a,
+        )
+        animateDefaults.curveValues.x0?.let {
+            newCurveValues.x0 = animateFromTo(
+                from = curveValues.x0!!,
+                to = it,
+                duration = animateDefaults.duration
+            ).value
+        }
+        animateDefaults.curveValues.x1?.let {
+            newCurveValues.x1 = animateFromTo(
+                from = curveValues.x1!!,
+                to = it,
+                duration = animateDefaults.duration
+            ).value
+        }
+        animateDefaults.curveValues.x2?.let {
+            newCurveValues.x2 = animateFromTo(
+                from = curveValues.x2!!,
+                to = it,
+                duration = animateDefaults.duration
+            ).value
+        }
+        animateDefaults.curveValues.x3?.let {
+            newCurveValues.x3 = animateFromTo(
+                from = if (curveValues.x3 != null) curveValues.x3!! else if (curveValues.x3String?.lowercase() == "width") 10f else 0f,
+                to = it,
+                duration = animateDefaults.duration
+            ).value
+        }
+        animateDefaults.curveValues.y0?.let {
+            newCurveValues.y0 = animateFromTo(
+                from = curveValues.y0!!,
+                to = it,
+                duration = animateDefaults.duration
+            ).value
+        }
+        animateDefaults.curveValues.y1?.let {
+            newCurveValues.y1 = animateFromTo(
+                from = curveValues.y1!!,
+                to = it,
+                duration = animateDefaults.duration
+            ).value
+        }
+        animateDefaults.curveValues.y2?.let {
+            newCurveValues.y2 = animateFromTo(
+                from = curveValues.y2!!,
+                to = it,
+                duration = animateDefaults.duration
+            ).value
+        }
+        animateDefaults.curveValues.y3?.let {
+            newCurveValues.y3 = animateFromTo(
+                from = curveValues.y3!!,
+                to = it,
+                duration = animateDefaults.duration
+            ).value
+        }
+        afterAnimation(newCurveValues)
+    }
+
+    @Composable
+    private fun animateFromTo(from: Float, to: Float, duration: Int) =
+        rememberInfiniteTransition().animateFloat(
+            initialValue = from,
+            targetValue = to,
+            animationSpec = InfiniteRepeatableSpec(
+                repeatMode = RepeatMode.Reverse,
+                animation = tween(duration)
+            )
+        )
 
     @Composable
     fun Curve(
         modifier: Modifier,
-        backgroundColor: Color = colorResource(id = android.R.color.transparent),
-        curvePropertiesMain: CurveProperties = CurveProperties(),
+        backgroundColor: Color = colorResource(id = R.color.color_transparent),
+        curveProperties: CurveProperties = CurveProperties(),
         curveValues: CurveValues,
         content: (@Composable BoxScope.() -> Unit)? = null
     ) {
         val context = LocalContext.current
-        var newInstanceOfCurveValues = curveValues
-        var curveProperties = curvePropertiesMain
+        var newInstanceOfCurveValues by remember { mutableStateOf(curveValues) }
+        val path = Path()
+
+        if (curveProperties.animate.animate) //For animation
+            AnimationWork(
+                curveValues = newInstanceOfCurveValues,
+                animateDefaults = curveProperties.animate,
+            ) {
+                newInstanceOfCurveValues = it
+            }
+
         checkX3Value(curveValues.x3String) { x3, halfWidth ->
             newInstanceOfCurveValues.x3 = x3
             curveProperties.halfWidth = halfWidth
@@ -40,7 +142,8 @@ object DynamicCurveCompose {
             ifMirrored(curveValues, curveProperties.deltaDivisible) {
                 newInstanceOfCurveValues = it
             }
-        val path = Path()
+
+
         val paint = Paint()
         paint.isAntiAlias = true
         paint.style = PaintingStyle.Fill
@@ -65,16 +168,15 @@ object DynamicCurveCompose {
                     val delta = width / curveProperties.deltaDivisible
                     val deltaHeight = height / curveProperties.deltaDivisible
 
-                    if (curveProperties.upsideDown)
-                        ifUpsideDown(
-                            curveValues,
-                            curveProperties,
-                            height,
-                            delta
-                        ) { curveValues, curvePropertiesNew ->
-                            newInstanceOfCurveValues = curveValues
-                            curveProperties = curvePropertiesNew
-                        } //For upSideDown
+                    ifUpsideDown(
+                        curveValues,
+                        curveProperties,
+                        height,
+                        delta
+                    ) { newValues, newProperties ->
+                        newInstanceOfCurveValues = newValues
+                        curveProperties.upsideDown = newProperties.upsideDown
+                    } //For upSideDown
 
                     path.moveTo(
                         if (curveProperties.isInPx) x0!!.dp2px(context) else x0!! * delta,
@@ -161,6 +263,7 @@ object DynamicCurveCompose {
 
     }
 
+
     private fun ifMirrored(
         curveValues: CurveValues,
         deltaDivisible: Float,
@@ -191,8 +294,8 @@ object DynamicCurveCompose {
         delta: Float,
         newValues: (curveValue: CurveValues, curveProperties: CurveProperties) -> Unit
     ) {
-        curveValues.apply {
-            if (!curveProperties.upsideDownCalculated) {
+        curveValues.run {
+            if (curveProperties.upsideDown) {
                 val dummyY0 = y0
                 val dummyY1 = y1
                 val dummyY2 = y2
@@ -209,7 +312,7 @@ object DynamicCurveCompose {
                     y2a = height / delta - (dummyY2a ?: 0f)
                     y3a = height / delta - (dummyY3a ?: 0f)
                 }
-                curveProperties.upsideDownCalculated = true
+                curveProperties.upsideDown = false
             }
         }
         newValues(curveValues, curveProperties)

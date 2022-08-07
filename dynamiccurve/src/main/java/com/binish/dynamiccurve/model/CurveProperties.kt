@@ -1,5 +1,6 @@
 package com.binish.dynamiccurve.model
 
+import com.binish.dynamiccurve.DynamicCurveCompose
 import com.binish.dynamiccurve.R
 
 data class CurveProperties(
@@ -16,5 +17,6 @@ data class CurveProperties(
     var isInPx: Boolean = false,
     var deltaDivisible: Float = 10f,
     var upsideDownCalculated: Boolean = true,
-    var paintColor: Int = R.color.color_orange
+    var paintColor: Int = R.color.color_orange,
+    var animate: AnimateDefaults = AnimateDefaults()
 )
